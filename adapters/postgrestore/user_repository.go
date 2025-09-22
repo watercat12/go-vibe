@@ -43,7 +43,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (*user.Us
 	return schema.ToDomain(), nil
 }
 
-func (r *userRepository) GetByID(ctx context.Context, id uint) (*user.User, error) {
+func (r *userRepository) GetByID(ctx context.Context, id int) (*user.User, error) {
 	var schema User
 	if err := r.db.WithContext(ctx).First(&schema, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

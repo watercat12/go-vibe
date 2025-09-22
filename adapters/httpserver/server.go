@@ -54,7 +54,8 @@ func New(options ...Options) (*Server, error) {
 
 	s.RegisterHealthCheck(s.Router.Group(""))
 	apiGroup := s.Router.Group("/api")
-	s.RegisterUserRoutes(apiGroup)
+	s.RegisterRoutes(apiGroup.Group("/auth"))
+	s.RegisterUserRoutes(apiGroup.Group("/users"))
 
 	return &s, nil
 }
@@ -78,7 +79,7 @@ func (s *Server) RegisterGlobalMiddlewares() {
 func (s *Server) RegisterAuthMiddlewares() {
 	skipperPath := []string{
 		"/healthz",
-		"/api/users",
+		"/api/auth/register",
 	}
 	s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())
 }
@@ -119,6 +120,10 @@ func (s *Server) requestID(c echo.Context) string {
 	return c.Response().Header().Get(echo.HeaderXRequestID)
 }
 
+func (s *Server) RegisterRoutes(router *echo.Group) {
+	router.POST("/register", s.CreateUser)
+}
+
 func (s *Server) RegisterUserRoutes(router *echo.Group) {
-	router.POST("/users", s.CreateUser)
+	router.GET("/me", s.GetMe)
 }

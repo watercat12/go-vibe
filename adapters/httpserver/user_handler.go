@@ -45,3 +45,23 @@ func (s *Server) CreateUser(c echo.Context) error {
 	resp := presenter.NewCreateUserResponse(token)
 	return c.JSON(http.StatusCreated, resp)
 }
+
+func (s *Server) GetMe(c echo.Context) error {
+	userIDStr, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+
+	userID, err := strconv.ParseInt(userIDStr, 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid user id"})
+	}
+
+	user, err := s.UserRepository.GetByID(c.Request().Context(), int(userID))
+	if err != nil {
+		return s.handleError(c, err, http.StatusInternalServerError)
+	}
+
+	resp := presenter.NewUserResponse(user)
+	return c.JSON(http.StatusOK, resp)
+}
