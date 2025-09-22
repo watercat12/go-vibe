@@ -33,6 +33,30 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 
+func validatePassword(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+	if len(password) < 12 || len(password) > 50 {
+		return false
+	}
+	hasLower := false
+	hasUpper := false
+	hasNumber := false
+	hasSpecial := false
+	for _, char := range password {
+		switch {
+		case char >= 'a' && char <= 'z':
+			hasLower = true
+		case char >= 'A' && char <= 'Z':
+			hasUpper = true
+		case char >= '0' && char <= '9':
+			hasNumber = true
+		case char == '@' || char == '!' || char == '$' || char == '%' || char == '^':
+			hasSpecial = true
+		}
+	}
+	return hasLower && hasUpper && hasNumber && hasSpecial
+}
+
 func New(options ...Options) (*Server, error) {
 	s := Server{
 		Router: echo.New(),
@@ -40,7 +64,9 @@ func New(options ...Options) (*Server, error) {
 		Logger: logger.NOOPLogger,
 	}
 
-	s.Router.Validator = &CustomValidator{validator: validator.New()}
+	validate := validator.New()
+	validate.RegisterValidation("password", validatePassword)
+	s.Router.Validator = &CustomValidator{validator: validate}
 
 	for _, fn := range options {
 		if err := fn(&s); err != nil {
