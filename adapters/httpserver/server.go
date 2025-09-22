@@ -1,7 +1,7 @@
 package httpserver
 
 import (
-	"e-wallet/domain/user"
+	userdomain "e-wallet/domain/user"
 	"e-wallet/pkg/config"
 	"e-wallet/pkg/logger"
 	"e-wallet/pkg/sentry"
@@ -21,7 +21,7 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// repository layers
-	UserRepository user.UserRepository
+	UserRepository userdomain.UserRepository
 	// service layers
 }
 
@@ -79,7 +79,7 @@ func (s *Server) RegisterGlobalMiddlewares() {
 func (s *Server) RegisterAuthMiddlewares() {
 	skipperPath := []string{
 		"/healthz",
-		"/api/auth/register",
+		"/api/auth",
 	}
 	s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())
 }
@@ -122,6 +122,7 @@ func (s *Server) requestID(c echo.Context) string {
 
 func (s *Server) RegisterRoutes(router *echo.Group) {
 	router.POST("/register", s.CreateUser)
+	router.POST("/login", s.Login)
 }
 
 func (s *Server) RegisterUserRoutes(router *echo.Group) {

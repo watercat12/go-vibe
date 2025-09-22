@@ -2,7 +2,7 @@ package httpserver
 
 import (
 	"e-wallet/adapters/httpserver/model"
-	"e-wallet/domain/user"
+	userdomain "e-wallet/domain/user"
 	"e-wallet/presenter"
 	"net/http"
 	"strconv"
@@ -20,18 +20,18 @@ func (s *Server) CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	hashedPassword, err := user.HashPassword(req.Password)
+	hashedPassword, err := userdomain.HashPassword(req.Password)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to hash password"})
 	}
 
-	user := &user.User{
+	usr := &userdomain.User{
 		Email:    req.Email,
 		Name:     req.Name,
 		Password: hashedPassword,
 	}
 
-	createdUser, err := s.UserRepository.Create(c.Request().Context(), user)
+	createdUser, err := s.UserRepository.Create(c.Request().Context(), usr)
 	if err != nil {
 		return s.handleError(c, err, http.StatusInternalServerError)
 	}
@@ -44,6 +44,35 @@ func (s *Server) CreateUser(c echo.Context) error {
 
 	resp := presenter.NewCreateUserResponse(token)
 	return c.JSON(http.StatusCreated, resp)
+}
+
+func (s *Server) Login(c echo.Context) error {
+	var req model.LoginRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	usr, err := s.UserRepository.GetByEmail(c.Request().Context(), req.Email)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid credentials"})
+	}
+
+	if err := userdomain.CheckPassword(usr.Password, req.Password); err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid credentials"})
+	}
+
+	payload := TokenPayload{UserID: strconv.Itoa(usr.ID)}
+	token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)
+	if err != nil {
+		return s.handleError(c, err, http.StatusInternalServerError)
+	}
+
+	resp := presenter.NewLoginResponse(token)
+	return c.JSON(http.StatusOK, resp)
 }
 
 func (s *Server) GetMe(c echo.Context) error {
