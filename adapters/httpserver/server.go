@@ -153,4 +153,5 @@ func (s *Server) RegisterRoutes(router *echo.Group) {
 
 func (s *Server) RegisterUserRoutes(router *echo.Group) {
 	router.GET("/me", s.GetMe)
+	router.PUT("/profile", s.UpdateProfile)
 }

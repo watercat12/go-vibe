@@ -3,6 +3,7 @@ package postgrestore
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"e-wallet/domain/user"
 
@@ -53,4 +54,29 @@ func (r *userRepository) GetByID(ctx context.Context, id int) (*user.User, error
 	}
 
 	return schema.ToDomain(), nil
+}
+
+func (r *userRepository) UpdateProfile(ctx context.Context, profile *user.UserProfile) error {
+	schema := UserProfile{
+		Name:      profile.Name,
+		Email:     profile.Email,
+		Avatar:    profile.Avatar,
+		Phone:     profile.Phone,
+		IDNumber:  profile.IDNumber,
+		BirthYear: profile.BirthYear,
+		Gender:    profile.Gender,
+		Team:      profile.Team,
+	}
+
+	// Upsert: if exists update, else create
+	if err := r.db.WithContext(ctx).Table(UserProfilesTableName).
+	Where("user_id = ?", profile.UserID).
+	Assign(schema).
+	FirstOrCreate(&schema).Error; err != nil {
+		return err
+	}
+
+	fmt.Printf("schema: %v\n", schema)
+
+	return nil
 }

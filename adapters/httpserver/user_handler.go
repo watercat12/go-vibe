@@ -94,3 +94,42 @@ func (s *Server) GetMe(c echo.Context) error {
 	resp := presenter.NewUserResponse(user)
 	return c.JSON(http.StatusOK, resp)
 }
+
+func (s *Server) UpdateProfile(c echo.Context) error {
+	userIDStr, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+
+	userID, err := strconv.ParseInt(userIDStr, 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid user id"})
+	}
+
+	var req model.UpdateProfileRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	profile := &userdomain.UserProfile{
+		UserID:    int(userID),
+		Name:      req.Name,
+		Email:     req.Email,
+		Avatar:    req.Avatar,
+		Phone:     req.Phone,
+		IDNumber:  req.IDNumber,
+		BirthYear: req.BirthYear,
+		Gender:    req.Gender,
+		Team:      req.Team,
+	}
+
+	if err := s.UserRepository.UpdateProfile(c.Request().Context(), profile); err != nil {
+		return s.handleError(c, err, http.StatusInternalServerError)
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "ok"})
+}

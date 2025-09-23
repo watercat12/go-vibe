@@ -21,10 +21,24 @@ type CreateUserRequest struct {
 	Name  string `json:"name"`
 }
 
+type UserProfile struct {
+	ID        int    `json:"id"`
+	UserID    int    `json:"user_id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Avatar    string `json:"avatar"`
+	Phone     string `json:"phone"`
+	IDNumber  string `json:"id_number"`
+	BirthYear int    `json:"birth_year"`
+	Gender    string `json:"gender"`
+	Team      string `json:"team"`
+}
+
 type UserRepository interface {
 	Create(ctx context.Context, user *User) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetByID(ctx context.Context, id int) (*User, error)
+	UpdateProfile(ctx context.Context, profile *UserProfile) error
 }
 
 type UserService interface {

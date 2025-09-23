@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Options struct {
@@ -41,6 +42,7 @@ func NewConnection(opts Options) (*gorm.DB, error) {
 	)
 
 	db, err := gorm.Open(postgres.Open(datasource), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
 		TranslateError: true,
 	})
 	if err != nil {

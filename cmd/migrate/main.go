@@ -12,7 +12,6 @@ import (
 
 func main() {
 	applogger, err := logger.NewAppLogger()
-	defer logger.Sync(applogger)
 	if err != nil {
 		log.Fatalf("cannot load config: %v\n", err)
 	}

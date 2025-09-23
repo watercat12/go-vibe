@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	UsersTableName     = "users"
+	UsersTableName       = "users"
+	UserProfilesTableName = "user_profiles"
 )
 
 type User struct {
@@ -22,6 +23,25 @@ func (User) TableName() string {
 	return "users"
 }
 
+type UserProfile struct {
+	ID        int       `gorm:"primaryKey"`
+	UserID    int       `gorm:"not null"`
+	Name      string
+	Email     string
+	Avatar    string
+	Phone     string
+	IDNumber  string
+	BirthYear int
+	Gender    string
+	Team      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (UserProfile) TableName() string {
+	return "user_profiles"
+}
+
 // ToDomain converts schema to domain model
 func (u *User) ToDomain() *user.User {
 	return &user.User{
@@ -31,5 +51,21 @@ func (u *User) ToDomain() *user.User {
 		Password:  u.Password,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
+	}
+}
+
+// ToDomain converts schema to domain model
+func (up *UserProfile) ToDomain() *user.UserProfile {
+	return &user.UserProfile{
+		ID:        up.ID,
+		UserID:    up.UserID,
+		Name:      up.Name,
+		Email:     up.Email,
+		Avatar:    up.Avatar,
+		Phone:     up.Phone,
+		IDNumber:  up.IDNumber,
+		BirthYear: up.BirthYear,
+		Gender:    up.Gender,
+		Team:      up.Team,
 	}
 }
