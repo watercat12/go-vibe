@@ -1,7 +1,7 @@
 -- +migrate Up
 -- 20240610120000_accounts.sql
 CREATE TABLE accounts (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     account_type VARCHAR(20) NOT NULL,
     account_number VARCHAR(30) UNIQUE NOT NULL,

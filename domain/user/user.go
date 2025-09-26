@@ -8,22 +8,23 @@ import (
 )
 
 type User struct {
-	ID        int      `json:"id" gorm:"primaryKey"`
-	Email     string    `json:"email" gorm:"uniqueIndex;not null"`
-	Name      string    `json:"name" gorm:"not null"`
-	Password  string    `json:"-" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID               string    `json:"id" gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	Username         string    `json:"username" gorm:"uniqueIndex;not null"`
+	Email            string    `json:"email" gorm:"uniqueIndex;not null"`
+	PasswordHash     string    `json:"-" gorm:"not null"`
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at"`
+	IsEmailVerified  bool      `json:"is_email_verified" gorm:"default:false"`
 }
 
 type CreateUserRequest struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
 }
 
 type UserProfile struct {
 	ID        int    `json:"id"`
-	UserID    int    `json:"user_id"`
+	UserID    string `json:"user_id"`
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Avatar    string `json:"avatar"`
@@ -37,7 +38,7 @@ type UserProfile struct {
 type UserRepository interface {
 	Create(ctx context.Context, user *User) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
-	GetByID(ctx context.Context, id int) (*User, error)
+	GetByID(ctx context.Context, id string) (*User, error)
 	UpdateProfile(ctx context.Context, profile *UserProfile) error
 }
 

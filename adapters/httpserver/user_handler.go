@@ -3,9 +3,9 @@ package httpserver
 import (
 	"e-wallet/adapters/httpserver/model"
 	userdomain "e-wallet/domain/user"
+	"e-wallet/pkg"
 	"e-wallet/presenter"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -26,9 +26,10 @@ func (s *Server) CreateUser(c echo.Context) error {
 	}
 
 	usr := &userdomain.User{
-		Email:    req.Email,
-		Name:     req.Name,
-		Password: hashedPassword,
+		ID:           pkg.NewUUIDV7(),
+		Username:     req.Username,
+		Email:        req.Email,
+		PasswordHash: hashedPassword,
 	}
 
 	createdUser, err := s.UserRepository.Create(c.Request().Context(), usr)
@@ -36,7 +37,7 @@ func (s *Server) CreateUser(c echo.Context) error {
 		return s.handleError(c, err, http.StatusInternalServerError)
 	}
 
-	payload := TokenPayload{UserID: strconv.Itoa(createdUser.ID)}
+	payload := TokenPayload{UserID: createdUser.ID}
 	token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)
 	if err != nil {
 		return s.handleError(c, err, http.StatusInternalServerError)
@@ -61,11 +62,11 @@ func (s *Server) Login(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid credentials"})
 	}
 
-	if err := userdomain.CheckPassword(usr.Password, req.Password); err != nil {
+	if err := userdomain.CheckPassword(usr.PasswordHash, req.Password); err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "invalid credentials"})
 	}
 
-	payload := TokenPayload{UserID: strconv.Itoa(usr.ID)}
+	payload := TokenPayload{UserID: usr.ID}
 	token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)
 	if err != nil {
 		return s.handleError(c, err, http.StatusInternalServerError)
@@ -81,12 +82,7 @@ func (s *Server) GetMe(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
 	}
 
-	userID, err := strconv.ParseInt(userIDStr, 10, 32)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid user id"})
-	}
-
-	user, err := s.UserRepository.GetByID(c.Request().Context(), int(userID))
+	user, err := s.UserRepository.GetByID(c.Request().Context(), userIDStr)
 	if err != nil {
 		return s.handleError(c, err, http.StatusInternalServerError)
 	}
@@ -101,11 +97,6 @@ func (s *Server) UpdateProfile(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
 	}
 
-	userID, err := strconv.ParseInt(userIDStr, 10, 32)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid user id"})
-	}
-
 	var req model.UpdateProfileRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
@@ -116,7 +107,7 @@ func (s *Server) UpdateProfile(c echo.Context) error {
 	}
 
 	profile := &userdomain.UserProfile{
-		UserID:    int(userID),
+		UserID:    userIDStr,
 		Name:      req.Name,
 		Email:     req.Email,
 		Avatar:    req.Avatar,
