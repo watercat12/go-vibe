@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"e-wallet/internal/adapters/handler/http/dto"
 	"e-wallet/internal/config"
 	"e-wallet/internal/domain/user"
 	"e-wallet/pkg/logger"
@@ -39,7 +40,9 @@ func New(options ...Options) (*Server, error) {
 		Logger: logger.NOOPLogger,
 	}
 
-	s.Router.Validator = &CustomValidator{validator: validator.New()}
+	v := validator.New()
+	dto.RegisterCustomValidations(v)
+	s.Router.Validator = &CustomValidator{validator: v}
 
 	for _, fn := range options {
 		if err := fn(&s); err != nil {
