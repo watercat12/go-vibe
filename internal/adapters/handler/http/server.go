@@ -121,4 +121,5 @@ func (s *Server) RegisterRoute() {
 	apiGroup := s.Router.Group("/api")
 	// auth
 	apiGroup.POST("/auth/register", s.CreateUser)
+	apiGroup.POST("/auth/login", s.LoginUser)
 }

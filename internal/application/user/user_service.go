@@ -30,3 +30,16 @@ func (s *userService) CreateUser(ctx context.Context, req *user.CreateUserReques
 
 	return s.repo.Create(ctx, u)
 }
+
+func (s *userService) LoginUser(ctx context.Context, req *user.LoginUserRequest) (*user.User, error) {
+	u, err := s.repo.GetByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := user.CheckPassword(u.PasswordHash, req.Password); err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}

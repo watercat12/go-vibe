@@ -18,6 +18,11 @@ type CreateUserResponse struct {
 	Token string        `json:"token"`
 }
 
+type LoginUserResponse struct {
+	User  *UserResponse `json:"user"`
+	Token string        `json:"token"`
+}
+
 func NewUserResponse(user *user.User) *UserResponse {
 	return &UserResponse{
 		ID:        user.ID,
@@ -30,6 +35,13 @@ func NewUserResponse(user *user.User) *UserResponse {
 
 func NewCreateUserResponse(token string) *CreateUserResponse {
 	return &CreateUserResponse{
+		Token: token,
+	}
+}
+
+func NewLoginUserResponse(user *user.User, token string) *LoginUserResponse {
+	return &LoginUserResponse{
+		User:  NewUserResponse(user),
 		Token: token,
 	}
 }
