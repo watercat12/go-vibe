@@ -7,6 +7,7 @@ import (
 
 	httpserver "e-wallet/internal/adapters/handler/http"
 	"e-wallet/internal/adapters/repository/postgres"
+	"e-wallet/internal/application/account"
 	"e-wallet/internal/application/user"
 	"e-wallet/internal/config"
 	"e-wallet/pkg/logger"
@@ -48,7 +49,9 @@ func main() {
 	server.Logger = applog
 	repo := postgres.NewUserRepository(db)
 	profileRepo := postgres.NewProfileRepository(db)
+	accountRepo := postgres.NewAccountRepository(db)
 	server.UserService = user.NewUserService(repo, profileRepo)
+	server.AccountService = account.NewAccountService(accountRepo, repo, profileRepo)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	applog.Info("server started!")

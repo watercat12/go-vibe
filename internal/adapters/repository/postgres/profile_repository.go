@@ -43,7 +43,7 @@ func (r *profileRepository) GetByUserID(ctx context.Context, userID string) (*us
 	var schema Profile
 	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("profile not found")
+			return nil, ErrProfileNotFound
 		}
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package httpserver
 import (
 	"e-wallet/internal/adapters/handler/http/dto"
 	"e-wallet/internal/config"
+	"e-wallet/internal/domain/account"
 	"e-wallet/internal/domain/user"
 	"e-wallet/pkg/logger"
 	"e-wallet/pkg/sentry"
@@ -22,7 +23,8 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// service layers
-	UserService user.UserService
+	UserService    user.UserService
+	AccountService account.AccountService
 }
 
 type CustomValidator struct {
@@ -127,4 +129,6 @@ func (s *Server) RegisterRoute() {
 	apiGroup.POST("/auth/login", s.LoginUser)
 	// user
 	apiGroup.PUT("/user/profile", s.UpdateProfile)
+	// accounts
+	apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)
 }

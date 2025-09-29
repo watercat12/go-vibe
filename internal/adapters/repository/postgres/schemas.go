@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"e-wallet/internal/domain/account"
 	"e-wallet/internal/domain/user"
 	"time"
 )
@@ -8,6 +9,7 @@ import (
 const (
 	UsersTableName     = "users"
 	ProfilesTableName  = "profiles"
+	AccountsTableName  = "accounts"
 )
 
 type User struct {
@@ -69,5 +71,38 @@ func (p *Profile) ToDomain() *user.Profile {
 		Team:        p.Team,
 		CreatedAt:   p.CreatedAt,
 		UpdatedAt:   p.UpdatedAt,
+	}
+}
+
+type Account struct {
+	ID              string   `gorm:"type:uuid"`
+	UserID          string   `gorm:"not null"`
+	AccountType     string   `gorm:"not null"`
+	AccountNumber   string   `gorm:"unique;not null"`
+	AccountName     string
+	Balance         float64  `gorm:"type:numeric(18,2);default:0.00"`
+	InterestRate    *float64 `gorm:"type:numeric(5,2)"`
+	FixedTermMonths *int
+	CreatedAt       time.Time `gorm:"autoCreateTime"`
+	UpdatedAt       time.Time `gorm:"autoUpdateTime"`
+}
+
+func (Account) TableName() string {
+	return "accounts"
+}
+
+// ToDomain converts schema to domain model
+func (a *Account) ToDomain() *account.Account {
+	return &account.Account{
+		ID:              a.ID,
+		UserID:          a.UserID,
+		AccountType:     a.AccountType,
+		AccountNumber:   a.AccountNumber,
+		AccountName:     a.AccountName,
+		Balance:         a.Balance,
+		InterestRate:    a.InterestRate,
+		FixedTermMonths: a.FixedTermMonths,
+		CreatedAt:       a.CreatedAt,
+		UpdatedAt:       a.UpdatedAt,
 	}
 }

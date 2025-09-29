@@ -97,3 +97,18 @@ func (s *Server) UpdateProfile(c echo.Context) error {
 	resp := dto.NewUpdateProfileResponse(updatedProfile)
 	return c.JSON(http.StatusOK, resp)
 }
+
+func (s *Server) CreatePaymentAccount(c echo.Context) error {
+	userID, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+
+	createdAccount, err := s.AccountService.CreatePaymentAccount(c.Request().Context(), userID)
+	if err != nil {
+		return s.handleError(c, err, http.StatusBadRequest)
+	}
+
+	resp := dto.NewCreateAccountResponse(createdAccount)
+	return c.JSON(http.StatusCreated, resp)
+}

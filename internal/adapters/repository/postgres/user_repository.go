@@ -38,7 +38,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (*user.Us
 	var schema User
 	if err := r.db.WithContext(ctx).Where("email = ?", email).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("user not found")
+			return nil, ErrUserNotFound
 		}
 		return nil, err
 	}
@@ -50,26 +50,10 @@ func (r *userRepository) GetByID(ctx context.Context, id string) (*user.User, er
 	var schema User
 	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("user not found")
+			return nil, ErrUserNotFound
 		}
 		return nil, err
 	}
 
 	return schema.ToDomain(), nil
-}
-
-func (r *userRepository) Update(ctx context.Context, user *user.User) (*user.User, error) {
-	schema := &User{
-		ID:              user.ID,
-		Username:        user.Username,
-		Email:           user.Email,
-		PasswordHash:    user.PasswordHash,
-		IsEmailVerified: user.IsEmailVerified,
-	}
-
-	if err := r.db.WithContext(ctx).Table(UsersTableName).Where("id = ?", user.ID).Updates(schema).Error; err != nil {
-		return nil, err
-	}
-
-	return r.GetByID(ctx, user.ID)
 }
