@@ -1,7 +1,7 @@
-package postgrestore
+package postgres
 
 import (
-	"e-wallet/pkg/config"
+	"e-wallet/internal/config"
 	"fmt"
 	"strconv"
 

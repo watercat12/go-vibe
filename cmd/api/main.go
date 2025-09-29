@@ -5,9 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"e-wallet/adapters/httpserver"
-	"e-wallet/adapters/postgrestore"
-	"e-wallet/pkg/config"
+	httpserver "e-wallet/internal/adapters/handler/http"
+	"e-wallet/internal/adapters/repository/postgres"
+	"e-wallet/internal/application/user"
+	"e-wallet/internal/config"
 	"e-wallet/pkg/logger"
 
 	sentrygo "github.com/getsentry/sentry-go"
@@ -34,7 +35,7 @@ func main() {
 		applog.Fatalf("cannot init sentry: %v", err)
 	}
 
-	db, err := postgrestore.NewConnection(postgrestore.ParseFromConfig(cfg))
+	db, err := postgres.NewConnection(postgres.ParseFromConfig(cfg))
 	if err != nil {
 		applog.Fatal(err)
 	}
@@ -45,7 +46,8 @@ func main() {
 	}
 
 	server.Logger = applog
-	server.UserRepository = postgrestore.NewUserRepository(db)
+	repo := postgres.NewUserRepository(db)
+	server.UserService = user.NewUserService(repo)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	applog.Info("server started!")

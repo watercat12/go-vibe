@@ -1,8 +1,8 @@
 package httpserver
 
 import (
-	"e-wallet/domain/user"
-	"e-wallet/pkg/config"
+	"e-wallet/internal/config"
+	"e-wallet/internal/domain/user"
 	"e-wallet/pkg/logger"
 	"e-wallet/pkg/sentry"
 	"net/http"
@@ -20,9 +20,8 @@ type Server struct {
 	Config *config.Config
 	Logger *zap.SugaredLogger
 
-	// repository layers
-	UserRepository user.UserRepository
 	// service layers
+	UserService user.UserService
 }
 
 type CustomValidator struct {
@@ -51,10 +50,9 @@ func New(options ...Options) (*Server, error) {
 	s.RegisterGlobalMiddlewares()
 	s.RegisterAuthMiddlewares()
 	s.RegisterUserClaimsMiddlewares()
+	s.RegisterRoute()
 
 	s.RegisterHealthCheck(s.Router.Group(""))
-	apiGroup := s.Router.Group("/api")
-	s.RegisterUserRoutes(apiGroup)
 
 	return &s, nil
 }
@@ -78,7 +76,7 @@ func (s *Server) RegisterGlobalMiddlewares() {
 func (s *Server) RegisterAuthMiddlewares() {
 	skipperPath := []string{
 		"/healthz",
-		"/api/users",
+		"/api/auth",
 	}
 	s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())
 }
@@ -119,6 +117,8 @@ func (s *Server) requestID(c echo.Context) string {
 	return c.Response().Header().Get(echo.HeaderXRequestID)
 }
 
-func (s *Server) RegisterUserRoutes(router *echo.Group) {
-	router.POST("/users", s.CreateUser)
+func (s *Server) RegisterRoute() {
+	apiGroup := s.Router.Group("/api")
+	// auth
+	apiGroup.POST("/auth/register", s.CreateUser)
 }

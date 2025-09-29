@@ -1,6 +1,6 @@
 package httpserver
 
-import "e-wallet/pkg/config"
+import "e-wallet/internal/config"
 
 
 type Options func(s *Server) error

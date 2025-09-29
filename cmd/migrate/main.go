@@ -1,8 +1,8 @@
 package main
 
 import (
-	"e-wallet/adapters/postgrestore"
-	"e-wallet/pkg/config"
+	"e-wallet/internal/adapters/repository/postgres"
+	"e-wallet/internal/config"
 	"e-wallet/pkg/logger"
 	"log"
 	"strconv"
@@ -22,7 +22,7 @@ func main() {
 		applogger.Fatalf("cannot load config: %v\n", err)
 	}
 
-	db, err := postgrestore.NewConnection(postgrestore.Options{
+	db, err := postgres.NewConnection(postgres.Options{
 		DBName:   cfg.DB.Name,
 		DBUser:   cfg.DB.User,
 		Password: cfg.DB.Pass,

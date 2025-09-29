@@ -1,13 +1,13 @@
-package presenter
+package dto
 
 import (
-	"e-wallet/domain/user"
+	"e-wallet/internal/domain/user"
 	"time"
 )
 
 type UserResponse struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name"`
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -21,7 +21,7 @@ type CreateUserResponse struct {
 func NewUserResponse(user *user.User) *UserResponse {
 	return &UserResponse{
 		ID:        user.ID,
-		Name:      user.Name,
+		Username:  user.Username,
 		Email:     user.Email,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
