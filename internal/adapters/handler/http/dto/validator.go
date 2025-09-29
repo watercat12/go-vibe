@@ -24,6 +24,18 @@ func ValidatePassword(fl validator.FieldLevel) bool {
 	return hasLower && hasUpper && hasDigit && hasSpecial
 }
 
+func ValidateTeam(fl validator.FieldLevel) bool {
+	team := fl.Field().String()
+	validTeams := []string{"Front End", "Back End", "QA", "Admin", "Brse", "Design", "Others"}
+	for _, validTeam := range validTeams {
+		if team == validTeam {
+			return true
+		}
+	}
+	return false
+}
+
 func RegisterCustomValidations(v *validator.Validate) {
 	v.RegisterValidation("password", ValidatePassword)
+	v.RegisterValidation("team", ValidateTeam)
 }

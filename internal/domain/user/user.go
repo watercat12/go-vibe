@@ -31,6 +31,8 @@ type LoginUserRequest struct {
 type UserService interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest) (*User, error)
 	LoginUser(ctx context.Context, req *LoginUserRequest) (*User, error)
+	UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*Profile, error)
+	GetProfile(ctx context.Context, userID string) (*Profile, error)
 }
 
 func HashPassword(password string) (string, error) {

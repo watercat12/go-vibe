@@ -8,11 +8,12 @@ import (
 )
 
 type userService struct {
-	repo ports.UserRepository
+	repo            ports.UserRepository
+	profileRepo     ports.ProfileRepository
 }
 
-func NewUserService(repo ports.UserRepository) user.UserService {
-	return &userService{repo: repo}
+func NewUserService(repo ports.UserRepository, profileRepo ports.ProfileRepository) user.UserService {
+	return &userService{repo: repo, profileRepo: profileRepo}
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.User, error) {
@@ -42,4 +43,30 @@ func (s *userService) LoginUser(ctx context.Context, req *user.LoginUserRequest)
 	}
 
 	return u, nil
+}
+
+func (s *userService) UpdateProfile(ctx context.Context, userID string, req *user.UpdateProfileRequest) (*user.Profile, error) {
+	// Upsert profile
+	profile := &user.Profile{
+		ID:          pkg.NewUUIDV7(),
+		UserID:      userID,
+		DisplayName: req.DisplayName,
+		AvatarURL:   req.AvatarURL,
+		PhoneNumber: req.PhoneNumber,
+		NationalID:  req.NationalID,
+		BirthYear:   req.BirthYear,
+		Gender:      req.Gender,
+		Team:        req.Team,
+	}
+
+	p, err := s.profileRepo.Upsert(ctx, profile)
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
+func (s *userService) GetProfile(ctx context.Context, userID string) (*user.Profile, error) {
+	return s.profileRepo.GetByUserID(ctx, userID)
 }

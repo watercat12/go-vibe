@@ -47,7 +47,8 @@ func main() {
 
 	server.Logger = applog
 	repo := postgres.NewUserRepository(db)
-	server.UserService = user.NewUserService(repo)
+	profileRepo := postgres.NewProfileRepository(db)
+	server.UserService = user.NewUserService(repo, profileRepo)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	applog.Info("server started!")

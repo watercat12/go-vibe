@@ -64,3 +64,36 @@ func (s *Server) LoginUser(c echo.Context) error {
 	resp := dto.NewLoginUserResponse(user, token)
 	return c.JSON(http.StatusOK, resp)
 }
+
+func (s *Server) UpdateProfile(c echo.Context) error {
+	userID, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+
+	var req dto.UpdateProfileRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	updatedProfile, err := s.UserService.UpdateProfile(c.Request().Context(), userID, &user.UpdateProfileRequest{
+		Username:    req.Username,
+		DisplayName: req.DisplayName,
+		AvatarURL:   req.AvatarURL,
+		PhoneNumber: req.PhoneNumber,
+		NationalID:  req.NationalID,
+		BirthYear:   req.BirthYear,
+		Gender:      req.Gender,
+		Team:        req.Team,
+	})
+	if err != nil {
+		return s.handleError(c, err, http.StatusInternalServerError)
+	}
+
+	resp := dto.NewUpdateProfileResponse(updatedProfile)
+	return c.JSON(http.StatusOK, resp)
+}
