@@ -9,4 +9,5 @@ type AccountRepository interface {
 	Create(ctx context.Context, account *account.Account) (*account.Account, error)
 	GetByUserID(ctx context.Context, userID string) (*account.Account, error)
 	GetByID(ctx context.Context, id string) (*account.Account, error)
+	CountSavingsAccounts(ctx context.Context, userID string) (int64, error)
 }

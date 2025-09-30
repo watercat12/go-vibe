@@ -131,4 +131,5 @@ func (s *Server) RegisterRoute() {
 	apiGroup.PUT("/user/profile", s.UpdateProfile)
 	// accounts
 	apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)
+	apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)
 }

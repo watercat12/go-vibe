@@ -60,3 +60,11 @@ func (r *accountRepository) GetByID(ctx context.Context, id string) (*account.Ac
 
 	return schema.ToDomain(), nil
 }
+
+func (r *accountRepository) CountSavingsAccounts(ctx context.Context, userID string) (int64, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("user_id = ? AND account_type LIKE ?", userID, "savings_%").Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}

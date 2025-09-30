@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	PaymentAccountType = "payment"
+	PaymentAccountType      = "payment"
+	FixedSavingsAccountType = "savings_fixed"
 )
 
 type Account struct {
@@ -29,4 +30,5 @@ type CreateAccountRequest struct {
 
 type AccountService interface {
 	CreatePaymentAccount(ctx context.Context, userID string) (*Account, error)
+	CreateFixedSavingsAccount(ctx context.Context, userID string, termMonths int) (*Account, error)
 }
