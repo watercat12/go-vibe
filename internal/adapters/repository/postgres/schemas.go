@@ -7,17 +7,17 @@ import (
 )
 
 const (
-	UsersTableName     = "users"
-	ProfilesTableName  = "profiles"
-	AccountsTableName  = "accounts"
+	UsersTableName    = "users"
+	ProfilesTableName = "profiles"
+	AccountsTableName = "accounts"
 )
 
 type User struct {
-	ID              string    `gorm:"type:uuid"`
-	Username        string    `gorm:"uniqueIndex;not null"`
-	Email           string    `gorm:"uniqueIndex;not null"`
-	PasswordHash    string    `gorm:"not null"`
-	IsEmailVerified bool      `gorm:"default:false"`
+	ID              string
+	Username        string
+	Email           string
+	PasswordHash    string
+	IsEmailVerified bool
 	CreatedAt       time.Time `gorm:"autoCreateTime"`
 	UpdatedAt       time.Time `gorm:"autoUpdateTime"`
 }
@@ -26,7 +26,6 @@ func (User) TableName() string {
 	return "users"
 }
 
-// ToDomain converts schema to domain model
 func (u *User) ToDomain() *user.User {
 	return &user.User{
 		ID:              u.ID,
@@ -40,8 +39,8 @@ func (u *User) ToDomain() *user.User {
 }
 
 type Profile struct {
-	ID          string    `gorm:"type:uuid"`
-	UserID      string    `gorm:"not null"`
+	ID          string
+	UserID      string
 	DisplayName string
 	AvatarURL   string
 	PhoneNumber string
@@ -53,11 +52,6 @@ type Profile struct {
 	UpdatedAt   time.Time `gorm:"autoUpdateTime"`
 }
 
-func (Profile) TableName() string {
-	return "profiles"
-}
-
-// ToDomain converts schema to domain model
 func (p *Profile) ToDomain() *user.Profile {
 	return &user.Profile{
 		ID:          p.ID,
@@ -75,23 +69,18 @@ func (p *Profile) ToDomain() *user.Profile {
 }
 
 type Account struct {
-	ID              string   `gorm:"type:uuid"`
-	UserID          string   `gorm:"not null"`
-	AccountType     string   `gorm:"not null"`
-	AccountNumber   string   `gorm:"unique;not null"`
+	ID              string
+	UserID          string
+	AccountType     string
+	AccountNumber   string
 	AccountName     string
-	Balance         float64  `gorm:"type:numeric(18,2);default:0.00"`
-	InterestRate    *float64 `gorm:"type:numeric(5,2)"`
+	Balance         float64
+	InterestRate    *float64
 	FixedTermMonths *int
 	CreatedAt       time.Time `gorm:"autoCreateTime"`
 	UpdatedAt       time.Time `gorm:"autoUpdateTime"`
 }
 
-func (Account) TableName() string {
-	return "accounts"
-}
-
-// ToDomain converts schema to domain model
 func (a *Account) ToDomain() *account.Account {
 	return &account.Account{
 		ID:              a.ID,
