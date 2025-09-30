@@ -132,4 +132,5 @@ func (s *Server) RegisterRoute() {
 	// accounts
 	apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)
 	apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)
+	apiGroup.POST("/accounts/savings/flexible", s.CreateFlexibleSavingsAccount)
 }

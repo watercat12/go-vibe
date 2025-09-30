@@ -22,6 +22,21 @@ func (s *Server) CreatePaymentAccount(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+func (s *Server) CreateFlexibleSavingsAccount(c echo.Context) error {
+	userID, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+	}
+
+	createdAccount, err := s.AccountService.CreateFlexibleSavingsAccount(c.Request().Context(), userID)
+	if err != nil {
+		return s.handleError(c, err, http.StatusBadRequest)
+	}
+
+	resp := dto.NewCreateAccountResponse(createdAccount)
+	return c.JSON(http.StatusCreated, resp)
+}
+
 func (s *Server) CreateFixedSavingsAccount(c echo.Context) error {
 	userID, ok := c.Get(UserIDKey).(string)
 	if !ok {
