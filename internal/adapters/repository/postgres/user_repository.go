@@ -36,7 +36,7 @@ func (r *userRepository) Create(ctx context.Context, user *user.User) (*user.Use
 
 func (r *userRepository) GetByEmail(ctx context.Context, email string) (*user.User, error) {
 	var schema User
-	if err := r.db.WithContext(ctx).Where("email = ?", email).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(UsersTableName).Where("email = ?", email).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrUserNotFound
 		}
@@ -48,7 +48,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (*user.Us
 
 func (r *userRepository) GetByID(ctx context.Context, id string) (*user.User, error) {
 	var schema User
-	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(UsersTableName).Where("id = ?", id).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrUserNotFound
 		}

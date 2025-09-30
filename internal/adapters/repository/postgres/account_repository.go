@@ -39,7 +39,7 @@ func (r *accountRepository) Create(ctx context.Context, account *account.Account
 
 func (r *accountRepository) GetByUserID(ctx context.Context, userID string) (*account.Account, error) {
 	var schema Account
-	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("user_id = ?", userID).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrAccountNotFound
 		}
@@ -51,7 +51,7 @@ func (r *accountRepository) GetByUserID(ctx context.Context, userID string) (*ac
 
 func (r *accountRepository) GetByID(ctx context.Context, id string) (*account.Account, error) {
 	var schema Account
-	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("id = ?", id).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrAccountNotFound
 		}

@@ -41,7 +41,7 @@ func (r *profileRepository) Create(ctx context.Context, profile *user.Profile) (
 
 func (r *profileRepository) GetByUserID(ctx context.Context, userID string) (*user.Profile, error) {
 	var schema Profile
-	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(ProfilesTableName).Where("user_id = ?", userID).First(&schema).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrProfileNotFound
 		}
