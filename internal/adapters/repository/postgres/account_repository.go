@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"e-wallet/internal/domain/account"
 	"e-wallet/internal/ports"
@@ -35,7 +34,6 @@ func (r *accountRepository) Create(ctx context.Context, account *account.Account
 		return nil, err
 	}
 
-	fmt.Printf("schema: %v\n", schema)
 	return schema.ToDomain(), nil
 }
 

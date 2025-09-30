@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+const (
+	PaymentAccountType = "payment"
+)
+
 type Account struct {
 	ID               string    `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
 	UserID           string    `json:"user_id" gorm:"not null"`

@@ -45,7 +45,7 @@ func (s *accountService) CreatePaymentAccount(ctx context.Context, userID string
 	acc := &account.Account{
 		ID:            pkg.NewUUIDV7(),
 		UserID:        userID,
-		AccountType:   "payment",
+		AccountType:   account.PaymentAccountType,
 		AccountNumber: accountNumber,
 		Balance:       0.0,
 	}
