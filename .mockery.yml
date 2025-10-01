@@ -6,4 +6,6 @@ packages:
   e-wallet/internal/ports:
     config:
       all: true
-      filename: "mocks/ports_mocks.go"
+      dir: "mocks"
+      pkgname: "mocks"
+      filename: "ports_mocks.go"
