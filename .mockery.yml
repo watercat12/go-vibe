@@ -1,11 +1,9 @@
+dir: '{{.InterfaceDir}}'
+structname: '{{.Mock}}{{.InterfaceName}}'
 template: testify
-formatter: goimports
-force-file-write: true
+
 packages:
   e-wallet/internal/ports:
     config:
       all: true
-      dir: "{{.InterfaceDir}}"
-      filename: "mocks_test.go"
-      pkgname: "{{.PackageName}}_test"
-      structname: "Mock{{.InterfaceName}}"
+      filename: "mocks/ports_mocks.go"
