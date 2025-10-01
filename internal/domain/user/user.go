@@ -1,7 +1,6 @@
 package user
 
 import (
-	"context"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -26,13 +25,6 @@ type CreateUserRequest struct {
 type LoginUserRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
-}
-
-type UserService interface {
-	CreateUser(ctx context.Context, req *CreateUserRequest) (*User, error)
-	LoginUser(ctx context.Context, req *LoginUserRequest) (*User, error)
-	UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*Profile, error)
-	GetProfile(ctx context.Context, userID string) (*Profile, error)
 }
 
 func HashPassword(password string) (string, error) {

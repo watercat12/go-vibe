@@ -1,7 +1,6 @@
 package account
 
 import (
-	"context"
 	"time"
 )
 
@@ -27,11 +26,4 @@ type Account struct {
 type CreateAccountRequest struct {
 	UserID      string `json:"user_id"`
 	AccountType string `json:"account_type"`
-}
-
-type AccountService interface {
-	CreatePaymentAccount(ctx context.Context, userID string) (*Account, error)
-	CreateFixedSavingsAccount(ctx context.Context, userID string, termMonths int) (*Account, error)
-	CreateFlexibleSavingsAccount(ctx context.Context, userID string) (*Account, error)
-	CalculateDailyInterest(ctx context.Context) error
 }

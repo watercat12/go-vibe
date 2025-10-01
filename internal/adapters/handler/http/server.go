@@ -3,8 +3,7 @@ package http
 import (
 	"e-wallet/internal/adapters/handler/http/dto"
 	"e-wallet/internal/config"
-	"e-wallet/internal/domain/account"
-	"e-wallet/internal/domain/user"
+	"e-wallet/internal/ports"
 	"e-wallet/pkg/logger"
 	"e-wallet/pkg/sentry"
 	"net/http"
@@ -23,8 +22,8 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// service layers
-	UserService    user.UserService
-	AccountService account.AccountService
+	UserService    ports.UserService
+	AccountService ports.AccountService
 }
 
 type CustomValidator struct {

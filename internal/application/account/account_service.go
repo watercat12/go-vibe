@@ -20,7 +20,7 @@ type accountService struct {
 	ihRepo      ports.InterestHistoryRepository
 }
 
-func NewAccountService(repo ports.AccountRepository, userRepo ports.UserRepository, profileRepo ports.ProfileRepository, txRepo ports.TransactionRepository, ihRepo ports.InterestHistoryRepository) account.AccountService {
+func NewAccountService(repo ports.AccountRepository, userRepo ports.UserRepository, profileRepo ports.ProfileRepository, txRepo ports.TransactionRepository, ihRepo ports.InterestHistoryRepository) ports.AccountService {
 	return &accountService{repo: repo, userRepo: userRepo, profileRepo: profileRepo, txRepo: txRepo, ihRepo: ihRepo}
 }
 
