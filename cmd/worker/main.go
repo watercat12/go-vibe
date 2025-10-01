@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
-	"net/http"
 
-	httpserver "e-wallet/internal/adapters/handler/http"
 	"e-wallet/internal/adapters/repository/postgres"
 	"e-wallet/internal/application/account"
-	"e-wallet/internal/application/user"
 	"e-wallet/internal/config"
 	"e-wallet/pkg/logger"
 
@@ -20,7 +17,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot load config: %v\n", err)
 	}
-	defer logger.Sync(applog)
 
 	cfg, err := config.LoadConfig()
 	if err != nil {
@@ -41,21 +37,17 @@ func main() {
 		applog.Fatal(err)
 	}
 
-	server, err := httpserver.New(httpserver.WithConfig(cfg))
-	if err != nil {
-		applog.Fatal(err)
-	}
-
-	server.Logger = applog
 	repo := postgres.NewUserRepository(db)
 	profileRepo := postgres.NewProfileRepository(db)
 	accountRepo := postgres.NewAccountRepository(db)
 	txRepo := postgres.NewTransactionRepository(db)
 	ihRepo := postgres.NewInterestHistoryRepository(db)
-	server.UserService = user.NewUserService(repo, profileRepo)
-	server.AccountService = account.NewAccountService(accountRepo, repo, profileRepo, txRepo, ihRepo)
+	accountService := account.NewAccountService(accountRepo, repo, profileRepo, txRepo, ihRepo)
 
-	addr := fmt.Sprintf(":%d", cfg.Port)
-	applog.Info("server started!")
-	applog.Fatal(http.ListenAndServe(addr, server))
+	// Run interest calculation
+	if err := accountService.CalculateDailyInterest(context.Background()); err != nil {
+		applog.Fatal(err)
+	}
+
+	applog.Info("Interest calculation completed successfully")
 }

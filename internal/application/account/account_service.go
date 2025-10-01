@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"e-wallet/internal/domain/account"
+	"e-wallet/internal/domain/interest_history"
+	"e-wallet/internal/domain/transaction"
 	"e-wallet/internal/ports"
 	"e-wallet/pkg"
 )
@@ -14,10 +16,12 @@ type accountService struct {
 	repo        ports.AccountRepository
 	userRepo    ports.UserRepository
 	profileRepo ports.ProfileRepository
+	txRepo      ports.TransactionRepository
+	ihRepo      ports.InterestHistoryRepository
 }
 
-func NewAccountService(repo ports.AccountRepository, userRepo ports.UserRepository, profileRepo ports.ProfileRepository) account.AccountService {
-	return &accountService{repo: repo, userRepo: userRepo, profileRepo: profileRepo}
+func NewAccountService(repo ports.AccountRepository, userRepo ports.UserRepository, profileRepo ports.ProfileRepository, txRepo ports.TransactionRepository, ihRepo ports.InterestHistoryRepository) account.AccountService {
+	return &accountService{repo: repo, userRepo: userRepo, profileRepo: profileRepo, txRepo: txRepo, ihRepo: ihRepo}
 }
 
 func (s *accountService) CreatePaymentAccount(ctx context.Context, userID string) (*account.Account, error) {
@@ -52,6 +56,75 @@ func (s *accountService) CreatePaymentAccount(ctx context.Context, userID string
 	}
 
 	return s.repo.Create(ctx, acc)
+}
+
+func (s *accountService) CalculateDailyInterest(ctx context.Context) error {
+	// Get yesterday's date
+	yesterday := time.Now().AddDate(0, 0, -1)
+
+	// Get all flexible savings accounts
+	accounts, err := s.repo.GetFlexibleSavingsAccounts(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, acc := range accounts {
+		// Calculate interest
+		interestAmount := s.calculateInterest(acc.Balance, acc.CreatedAt)
+
+		if interestAmount == 0 {
+			continue
+		}
+
+		// Update balance
+		newBalance := acc.Balance + interestAmount
+		if err := s.repo.UpdateBalance(ctx, acc.ID, newBalance); err != nil {
+			return err
+		}
+
+		// Create transaction
+		tx := &transaction.Transaction{
+			ID:              pkg.NewUUIDV7(),
+			AccountID:       acc.ID,
+			TransactionType: transaction.TransactionTypeInterest,
+			Amount:          interestAmount,
+			Status:          transaction.TransactionStatusSuccess,
+			BalanceAfter:    newBalance,
+		}
+		if _, err := s.txRepo.Create(ctx, tx); err != nil {
+			return err
+		}
+
+		// Create interest history
+		ih := &interest_history.InterestHistory{
+			ID:             pkg.NewUUIDV7(),
+			AccountID:      acc.ID,
+			Date:           yesterday,
+			InterestAmount: interestAmount,
+		}
+		if _, err := s.ihRepo.Create(ctx, ih); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *accountService) calculateInterest(balance float64, date time.Time) float64 {
+	var annualRate float64
+	switch {
+	case time.Since(date) < 30*24*time.Hour:
+		annualRate = 0.008
+	case balance < 10000000: // under 10M
+		annualRate = 0.003
+	case balance < 50000000: // 10-50M
+		annualRate = 0.004
+	default: // over 50M
+		annualRate = 0.005
+	}
+
+	dailyRate := annualRate / 365
+	return balance * dailyRate
 }
 
 func (s *accountService) CreateFlexibleSavingsAccount(ctx context.Context, userID string) (*account.Account, error) {

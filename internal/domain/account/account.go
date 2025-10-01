@@ -33,4 +33,5 @@ type AccountService interface {
 	CreatePaymentAccount(ctx context.Context, userID string) (*Account, error)
 	CreateFixedSavingsAccount(ctx context.Context, userID string, termMonths int) (*Account, error)
 	CreateFlexibleSavingsAccount(ctx context.Context, userID string) (*Account, error)
+	CalculateDailyInterest(ctx context.Context) error
 }

@@ -68,3 +68,20 @@ func (r *accountRepository) CountSavingsAccounts(ctx context.Context, userID str
 	}
 	return count, nil
 }
+
+func (r *accountRepository) GetFlexibleSavingsAccounts(ctx context.Context) ([]*account.Account, error) {
+	var schemas []Account
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("account_type = ?", account.FlexibleSavingsAccountType).Find(&schemas).Error; err != nil {
+		return nil, err
+	}
+
+	accounts := make([]*account.Account, len(schemas))
+	for i, schema := range schemas {
+		accounts[i] = schema.ToDomain()
+	}
+	return accounts, nil
+}
+
+func (r *accountRepository) UpdateBalance(ctx context.Context, id string, balance float64) error {
+	return r.db.WithContext(ctx).Table(AccountsTableName).Where("id = ?", id).Update("balance", balance).Error
+}
