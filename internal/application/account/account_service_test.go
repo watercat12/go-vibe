@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
 	"e-wallet/internal/domain/account"
+	"e-wallet/internal/domain/interest_history"
+	"e-wallet/internal/domain/transaction"
 	"e-wallet/internal/domain/user"
 	"e-wallet/mocks"
 )
@@ -709,6 +712,161 @@ func TestAccountService_CreateFixedSavingsAccount(t *testing.T) {
 				assert.Equal(t, tt.expectedResult.Balance, result.Balance)
 				assert.Equal(t, *tt.expectedResult.InterestRate, *result.InterestRate)
 				assert.Equal(t, *tt.expectedResult.FixedTermMonths, *result.FixedTermMonths)
+			}
+		})
+	}
+}
+
+func TestAccountService_CalculateDailyInterest(t *testing.T) {
+	tests := []struct {
+		name          string
+		mockSetup     func(*mocks.MockAccountRepository, *mocks.MockTransactionRepository, *mocks.MockInterestHistoryRepository)
+		expectedError error
+	}{
+		{
+			name: "success - calculate daily interest for multiple accounts",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, txRepo *mocks.MockTransactionRepository, ihRepo *mocks.MockInterestHistoryRepository) {
+				// Mock GetFlexibleSavingsAccounts to return multiple accounts
+				accounts := []*account.Account{
+					{ID: "acc-1", UserID: "user-1", AccountType: account.FlexibleSavingsAccountType, Balance: 1000000, CreatedAt: time.Now().AddDate(0, 0, -90)},    // Older than 30 days, balance < 10M (annualRate = 0.003)
+					{ID: "acc-2", UserID: "user-2", AccountType: account.FlexibleSavingsAccountType, Balance: 20000000, CreatedAt: time.Now().AddDate(0, 0, -10)}, // Newer than 30 days (annualRate = 0.008)
+					{ID: "acc-3", UserID: "user-3", AccountType: account.FlexibleSavingsAccountType, Balance: 60000000, CreatedAt: time.Now().AddDate(0, 0, -90)}, // Older than 30 days, balance > 50M (annualRate = 0.005)
+					{ID: "acc-4", UserID: "user-4", AccountType: account.FlexibleSavingsAccountType, Balance: 0, CreatedAt: time.Now().AddDate(0, 0, -90)},       // Zero balance (no interest)
+					{ID: "acc-5", UserID: "user-5", AccountType: account.FlexibleSavingsAccountType, Balance: 30000000, CreatedAt: time.Now().AddDate(0, 0, -90)}, // Older than 30 days, 10M <= balance < 50M (annualRate = 0.004)
+				}
+				accountRepo.EXPECT().GetFlexibleSavingsAccounts(mock.Anything).Return(accounts, nil).Once()
+
+				// Mock UpdateBalance for acc-1
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-1", mock.MatchedBy(func(balance float64) bool {
+					return balance > 1000000 // Expecting interest to be added
+				})).Return(nil).Once()
+
+				// Mock Create transaction for acc-1
+				txRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(tx *transaction.Transaction) bool {
+					return tx.AccountID == "acc-1" && tx.TransactionType == transaction.TransactionTypeInterest
+				})).Return(&transaction.Transaction{}, nil).Once()
+
+				// Mock Create interest history for acc-1
+				ihRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(ih *interest_history.InterestHistory) bool {
+					return ih.AccountID == "acc-1"
+				})).Return(&interest_history.InterestHistory{}, nil).Once()
+
+				// Mock UpdateBalance for acc-2
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-2", mock.MatchedBy(func(balance float64) bool {
+					return balance > 20000000 // Expecting interest to be added
+				})).Return(nil).Once()
+
+				// Mock Create transaction for acc-2
+				txRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(tx *transaction.Transaction) bool {
+					return tx.AccountID == "acc-2" && tx.TransactionType == transaction.TransactionTypeInterest
+				})).Return(&transaction.Transaction{}, nil).Once()
+
+				// Mock Create interest history for acc-2
+				ihRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(ih *interest_history.InterestHistory) bool {
+					return ih.AccountID == "acc-2"
+				})).Return(&interest_history.InterestHistory{}, nil).Once()
+
+				// Mock UpdateBalance for acc-3
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-3", mock.MatchedBy(func(balance float64) bool {
+					return balance > 60000000 // Expecting interest to be added
+				})).Return(nil).Once()
+
+				// Mock Create transaction for acc-3
+				txRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(tx *transaction.Transaction) bool {
+					return tx.AccountID == "acc-3" && tx.TransactionType == transaction.TransactionTypeInterest
+				})).Return(&transaction.Transaction{}, nil).Once()
+
+				// Mock Create interest history for acc-3
+				ihRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(ih *interest_history.InterestHistory) bool {
+					return ih.AccountID == "acc-3"
+				})).Return(&interest_history.InterestHistory{}, nil).Once()
+
+				// acc-4 (zero balance) should not trigger UpdateBalance, Create, Create
+
+				// Mock UpdateBalance for acc-5
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-5", mock.MatchedBy(func(balance float64) bool {
+					return balance > 30000000 // Expecting interest to be added
+				})).Return(nil).Once()
+
+				// Mock Create transaction for acc-5
+				txRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(tx *transaction.Transaction) bool {
+					return tx.AccountID == "acc-5" && tx.TransactionType == transaction.TransactionTypeInterest
+				})).Return(&transaction.Transaction{}, nil).Once()
+
+				// Mock Create interest history for acc-5
+				ihRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(ih *interest_history.InterestHistory) bool {
+					return ih.AccountID == "acc-5"
+				})).Return(&interest_history.InterestHistory{}, nil).Once()
+			},
+			expectedError: nil,
+		},
+		{
+			name: "error - GetFlexibleSavingsAccounts fails",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, txRepo *mocks.MockTransactionRepository, ihRepo *mocks.MockInterestHistoryRepository) {
+				accountRepo.EXPECT().GetFlexibleSavingsAccounts(mock.Anything).Return(nil, errors.New("db error")).Once()
+			},
+			expectedError: errors.New("db error"),
+		},
+		{
+			name: "error - UpdateBalance fails",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, txRepo *mocks.MockTransactionRepository, ihRepo *mocks.MockInterestHistoryRepository) {
+				accounts := []*account.Account{
+					{ID: "acc-1", UserID: "user-1", AccountType: account.FlexibleSavingsAccountType, Balance: 1000000, CreatedAt: time.Now().AddDate(0, 0, -60)},
+				}
+				accountRepo.EXPECT().GetFlexibleSavingsAccounts(mock.Anything).Return(accounts, nil).Once()
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-1", mock.AnythingOfType("float64")).Return(errors.New("update error")).Once()
+			},
+			expectedError: errors.New("update error"),
+		},
+		{
+			name: "error - Create transaction fails",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, txRepo *mocks.MockTransactionRepository, ihRepo *mocks.MockInterestHistoryRepository) {
+				accounts := []*account.Account{
+					{ID: "acc-1", UserID: "user-1", AccountType: account.FlexibleSavingsAccountType, Balance: 1000000, CreatedAt: time.Now().AddDate(0, 0, -60)},
+				}
+				accountRepo.EXPECT().GetFlexibleSavingsAccounts(mock.Anything).Return(accounts, nil).Once()
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-1", mock.AnythingOfType("float64")).Return(nil).Once()
+				txRepo.EXPECT().Create(mock.Anything, mock.AnythingOfType("*transaction.Transaction")).Return(nil, errors.New("tx error")).Once()
+			},
+			expectedError: errors.New("tx error"),
+		},
+		{
+			name: "error - Create interest history fails",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, txRepo *mocks.MockTransactionRepository, ihRepo *mocks.MockInterestHistoryRepository) {
+				accounts := []*account.Account{
+					{ID: "acc-1", UserID: "user-1", AccountType: account.FlexibleSavingsAccountType, Balance: 1000000, CreatedAt: time.Now().AddDate(0, 0, -60)},
+				}
+				accountRepo.EXPECT().GetFlexibleSavingsAccounts(mock.Anything).Return(accounts, nil).Once()
+				accountRepo.EXPECT().UpdateBalance(mock.Anything, "acc-1", mock.AnythingOfType("float64")).Return(nil).Once()
+				txRepo.EXPECT().Create(mock.Anything, mock.AnythingOfType("*transaction.Transaction")).Return(&transaction.Transaction{}, nil).Once()
+				ihRepo.EXPECT().Create(mock.Anything, mock.AnythingOfType("*interest_history.InterestHistory")).Return(nil, errors.New("ih error")).Once()
+			},
+			expectedError: errors.New("ih error"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create mocks
+			accountRepo := mocks.NewMockAccountRepository(t)
+			txRepo := mocks.NewMockTransactionRepository(t)
+			ihRepo := mocks.NewMockInterestHistoryRepository(t)
+
+			// Setup mocks
+			tt.mockSetup(accountRepo, txRepo, ihRepo)
+
+			// Create service
+			service := NewAccountService(accountRepo, nil, nil, txRepo, ihRepo)
+
+			// Execute
+			err := service.CalculateDailyInterest(context.Background())
+
+			// Assert
+			if tt.expectedError != nil {
+				assert.Error(t, err)
+				assert.Equal(t, tt.expectedError.Error(), err.Error())
+			} else {
+				assert.NoError(t, err)
 			}
 		})
 	}
