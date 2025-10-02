@@ -7,24 +7,24 @@ import (
 )
 
 type User struct {
-	ID               string    `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
-	Username         string    `json:"username" gorm:"uniqueIndex;not null"`
-	Email            string    `json:"email" gorm:"uniqueIndex;not null"`
-	PasswordHash     string    `json:"-" gorm:"not null"`
-	IsEmailVerified  bool      `json:"is_email_verified" gorm:"default:false"`
-	CreatedAt        time.Time `json:"created_at"`
-	UpdatedAt        time.Time `json:"updated_at"`
+	ID               string
+	Username         string
+	Email            string
+	PasswordHash     string
+	IsEmailVerified  bool
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 type CreateUserRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Username string
+	Email    string
+	Password string
 }
 
 type LoginUserRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string
+	Password string
 }
 
 func HashPassword(password string) (string, error) {
