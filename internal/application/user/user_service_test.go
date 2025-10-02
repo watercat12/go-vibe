@@ -23,7 +23,7 @@ func TestUserService_CreateUser(t *testing.T) {
 	tests := []struct {
 		name          string
 		request       *user.CreateUserRequest
-		mockSetup     func(*mocks.MockUserRepository, *mocks.MockProfileRepository)
+		mockSetup     func(*mocks.MockUserRepository, *mocks.MockProfileRepository, *mocks.MockPasswordService)
 		expectedUser  *user.User
 		expectedError error
 	}{
@@ -34,7 +34,8 @@ func TestUserService_CreateUser(t *testing.T) {
 				Email:    "test@example.com",
 				Password: "password123",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
+				passwordService.EXPECT().HashPassword("password123").Return(hashPassword("password123"), nil).Once()
 				userRepo.EXPECT().Create(mock.Anything, mock.MatchedBy(func(u *user.User) bool {
 					return u.Username == "testuser" && u.Email == "test@example.com" && len(u.PasswordHash) > 0
 				})).Return(&user.User{
@@ -52,13 +53,27 @@ func TestUserService_CreateUser(t *testing.T) {
 			expectedError: nil,
 		},
 		{
+			name: "error - password hashing fails",
+			request: &user.CreateUserRequest{
+				Username: "testuser",
+				Email:    "test@example.com",
+				Password: "password123",
+			},
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
+				passwordService.EXPECT().HashPassword("password123").Return("", errors.New("hash error")).Once()
+			},
+			expectedUser:  nil,
+			expectedError: errors.New("hash error"),
+		},
+		{
 			name: "error - repository create fails",
 			request: &user.CreateUserRequest{
 				Username: "testuser",
 				Email:    "test@example.com",
 				Password: "password123",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
+				passwordService.EXPECT().HashPassword("password123").Return(hashPassword("password123"), nil).Once()
 				userRepo.EXPECT().Create(mock.Anything, mock.Anything).Return(nil, errors.New("db error")).Once()
 			},
 			expectedUser:  nil,
@@ -70,10 +85,11 @@ func TestUserService_CreateUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			userRepo := mocks.NewMockUserRepository(t)
 			profileRepo := mocks.NewMockProfileRepository(t)
+			passwordService := mocks.NewMockPasswordService(t)
 
-			tt.mockSetup(userRepo, profileRepo)
+			tt.mockSetup(userRepo, profileRepo, passwordService)
 
-			service := NewUserService(userRepo, profileRepo)
+			service := NewUserService(userRepo, profileRepo, passwordService)
 			result, err := service.CreateUser(context.Background(), tt.request)
 
 			if tt.expectedError != nil {
@@ -96,7 +112,7 @@ func TestUserService_LoginUser(t *testing.T) {
 	tests := []struct {
 		name          string
 		request       *user.LoginUserRequest
-		mockSetup     func(*mocks.MockUserRepository, *mocks.MockProfileRepository)
+		mockSetup     func(*mocks.MockUserRepository, *mocks.MockProfileRepository, *mocks.MockPasswordService)
 		expectedUser  *user.User
 		expectedError error
 	}{
@@ -106,12 +122,13 @@ func TestUserService_LoginUser(t *testing.T) {
 				Email:    "test@example.com",
 				Password: "password123",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				userRepo.EXPECT().GetByEmail(mock.Anything, "test@example.com").Return(&user.User{
 					ID:           "user-123",
 					Email:        "test@example.com",
 					PasswordHash: hashedPwd,
 				}, nil).Once()
+				passwordService.EXPECT().CheckPassword(mock.Anything, "password123").Return(nil).Once()
 			},
 			expectedUser: &user.User{
 				ID:    "user-123",
@@ -125,7 +142,7 @@ func TestUserService_LoginUser(t *testing.T) {
 				Email:    "nonexistent@example.com",
 				Password: "password123",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				userRepo.EXPECT().GetByEmail(mock.Anything, "nonexistent@example.com").Return(nil, errors.New("user not found")).Once()
 			},
 			expectedUser:  nil,
@@ -137,12 +154,13 @@ func TestUserService_LoginUser(t *testing.T) {
 				Email:    "test@example.com",
 				Password: "wrongpassword",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				userRepo.EXPECT().GetByEmail(mock.Anything, "test@example.com").Return(&user.User{
 					ID:           "user-123",
 					Email:        "test@example.com",
 					PasswordHash: hashedPwd,
 				}, nil).Once()
+				passwordService.EXPECT().CheckPassword(mock.Anything, "wrongpassword").Return(bcrypt.ErrMismatchedHashAndPassword).Once()
 			},
 			expectedUser:  nil,
 			expectedError: bcrypt.ErrMismatchedHashAndPassword,
@@ -153,10 +171,11 @@ func TestUserService_LoginUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			userRepo := mocks.NewMockUserRepository(t)
 			profileRepo := mocks.NewMockProfileRepository(t)
+			passwordService := mocks.NewMockPasswordService(t)
 
-			tt.mockSetup(userRepo, profileRepo)
+			tt.mockSetup(userRepo, profileRepo, passwordService)
 
-			service := NewUserService(userRepo, profileRepo)
+			service := NewUserService(userRepo, profileRepo, passwordService)
 			result, err := service.LoginUser(context.Background(), tt.request)
 
 			if tt.expectedError != nil {
@@ -177,7 +196,7 @@ func TestUserService_UpdateProfile(t *testing.T) {
 		name            string
 		userID          string
 		request         *user.UpdateProfileRequest
-		mockSetup       func(*mocks.MockUserRepository, *mocks.MockProfileRepository)
+		mockSetup       func(*mocks.MockUserRepository, *mocks.MockProfileRepository, *mocks.MockPasswordService)
 		expectedProfile *user.Profile
 		expectedError   error
 	}{
@@ -188,7 +207,7 @@ func TestUserService_UpdateProfile(t *testing.T) {
 				DisplayName: "Test User",
 				AvatarURL:   "http://example.com/avatar.jpg",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				profileRepo.EXPECT().Upsert(mock.Anything, mock.MatchedBy(func(p *user.Profile) bool {
 					return p.UserID == "user-123" && p.DisplayName == "Test User"
 				})).Return(&user.Profile{
@@ -212,7 +231,7 @@ func TestUserService_UpdateProfile(t *testing.T) {
 			request: &user.UpdateProfileRequest{
 				DisplayName: "Test User",
 			},
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				profileRepo.EXPECT().Upsert(mock.Anything, mock.Anything).Return(nil, errors.New("db error")).Once()
 			},
 			expectedProfile: nil,
@@ -224,10 +243,11 @@ func TestUserService_UpdateProfile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			userRepo := mocks.NewMockUserRepository(t)
 			profileRepo := mocks.NewMockProfileRepository(t)
+			passwordService := mocks.NewMockPasswordService(t)
 
-			tt.mockSetup(userRepo, profileRepo)
+			tt.mockSetup(userRepo, profileRepo, passwordService)
 
-			service := NewUserService(userRepo, profileRepo)
+			service := NewUserService(userRepo, profileRepo, passwordService)
 			result, err := service.UpdateProfile(context.Background(), tt.userID, tt.request)
 
 			if tt.expectedError != nil {
@@ -248,14 +268,14 @@ func TestUserService_GetProfile(t *testing.T) {
 	tests := []struct {
 		name            string
 		userID          string
-		mockSetup       func(*mocks.MockUserRepository, *mocks.MockProfileRepository)
+		mockSetup       func(*mocks.MockUserRepository, *mocks.MockProfileRepository, *mocks.MockPasswordService)
 		expectedProfile *user.Profile
 		expectedError   error
 	}{
 		{
 			name:   "success - get profile",
 			userID: "user-123",
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				profileRepo.EXPECT().GetByUserID(mock.Anything, "user-123").Return(&user.Profile{
 					ID:     "profile-456",
 					UserID: "user-123",
@@ -270,7 +290,7 @@ func TestUserService_GetProfile(t *testing.T) {
 		{
 			name:   "error - profile not found",
 			userID: "user-123",
-			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository) {
+			mockSetup: func(userRepo *mocks.MockUserRepository, profileRepo *mocks.MockProfileRepository, passwordService *mocks.MockPasswordService) {
 				profileRepo.EXPECT().GetByUserID(mock.Anything, "user-123").Return(nil, errors.New("profile not found")).Once()
 			},
 			expectedProfile: nil,
@@ -282,10 +302,11 @@ func TestUserService_GetProfile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			userRepo := mocks.NewMockUserRepository(t)
 			profileRepo := mocks.NewMockProfileRepository(t)
+			passwordService := mocks.NewMockPasswordService(t)
 
-			tt.mockSetup(userRepo, profileRepo)
+			tt.mockSetup(userRepo, profileRepo, passwordService)
 
-			service := NewUserService(userRepo, profileRepo)
+			service := NewUserService(userRepo, profileRepo, passwordService)
 			result, err := service.GetProfile(context.Background(), tt.userID)
 
 			if tt.expectedError != nil {

@@ -10,14 +10,15 @@ import (
 type userService struct {
 	repo            ports.UserRepository
 	profileRepo     ports.ProfileRepository
+	passwordService ports.PasswordService
 }
 
-func NewUserService(repo ports.UserRepository, profileRepo ports.ProfileRepository) ports.UserService {
-	return &userService{repo: repo, profileRepo: profileRepo}
+func NewUserService(repo ports.UserRepository, profileRepo ports.ProfileRepository, passwordService ports.PasswordService) ports.UserService {
+	return &userService{repo: repo, profileRepo: profileRepo, passwordService: passwordService}
 }
 
 func (s *userService) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.User, error) {
-	hashedPassword, err := user.HashPassword(req.Password)
+	hashedPassword, err := s.passwordService.HashPassword(req.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +39,7 @@ func (s *userService) LoginUser(ctx context.Context, req *user.LoginUserRequest)
 		return nil, err
 	}
 
-	if err := user.CheckPassword(u.PasswordHash, req.Password); err != nil {
+	if err := s.passwordService.CheckPassword(u.PasswordHash, req.Password); err != nil {
 		return nil, err
 	}
 
