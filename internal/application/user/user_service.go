@@ -4,7 +4,6 @@ import (
 	"context"
 	"e-wallet/internal/domain/user"
 	"e-wallet/internal/ports"
-	"e-wallet/pkg"
 )
 
 type userService struct {
@@ -23,12 +22,7 @@ func (s *userService) CreateUser(ctx context.Context, req *user.CreateUserReques
 		return nil, err
 	}
 
-	u := &user.User{
-		ID:           pkg.NewUUIDV7(),
-		Username:     req.Username,
-		Email:        req.Email,
-		PasswordHash: hashedPassword,
-	}
+	u := user.NewUser(req.Username, req.Email, hashedPassword)
 
 	return s.repo.Create(ctx, u)
 }
@@ -47,18 +41,7 @@ func (s *userService) LoginUser(ctx context.Context, req *user.LoginUserRequest)
 }
 
 func (s *userService) UpdateProfile(ctx context.Context, userID string, req *user.UpdateProfileRequest) (*user.Profile, error) {
-	// Upsert profile
-	profile := &user.Profile{
-		ID:          pkg.NewUUIDV7(),
-		UserID:      userID,
-		DisplayName: req.DisplayName,
-		AvatarURL:   req.AvatarURL,
-		PhoneNumber: req.PhoneNumber,
-		NationalID:  req.NationalID,
-		BirthYear:   req.BirthYear,
-		Gender:      req.Gender,
-		Team:        req.Team,
-	}
+	profile := user.NewProfile(userID, req.DisplayName, req.AvatarURL, req.PhoneNumber, req.NationalID, req.Gender, req.Team, req.BirthYear)
 
 	p, err := s.profileRepo.Upsert(ctx, profile)
 	if err != nil {

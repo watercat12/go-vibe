@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 
+	"e-wallet/pkg"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,6 +26,15 @@ type CreateUserRequest struct {
 type LoginUserRequest struct {
 	Email    string
 	Password string
+}
+
+func NewUser(username, email, passwordHash string) *User {
+	return &User{
+		ID:           pkg.NewUUIDV7(),
+		Username:     username,
+		Email:        email,
+		PasswordHash: passwordHash,
+	}
 }
 
 func HashPassword(password string) (string, error) {
