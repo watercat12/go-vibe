@@ -3,3 +3,4 @@
 *.yaml
 *.yml
 mocks
+!coverage/index-application.html
