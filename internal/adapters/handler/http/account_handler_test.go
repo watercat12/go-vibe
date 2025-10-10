@@ -21,11 +21,11 @@ import (
 
 func TestServer_CreatePaymentAccount(t *testing.T) {
 	tests := []struct {
-		name           string
-		userID         string
-		mockSetup      func(*mocks.MockAccountService)
-		expectedStatus int
-		expectedBody   string
+		name             string
+		userID           string
+		mockSetup        func(*mocks.MockAccountService)
+		expectedStatus   int
+		expectedResponse dto.Response
 	}{
 		{
 			name:   "success - create payment account",
@@ -44,8 +44,18 @@ func TestServer_CreatePaymentAccount(t *testing.T) {
 					}, nil).
 					Once()
 			},
-			expectedStatus: http.StatusCreated,
-			expectedBody:   `{"account":{"account_id":"acc-123","account_number":"PAY123456789","balance":0}}`,
+			expectedStatus: http.StatusOK,
+			expectedResponse: dto.Response{
+				Status:  http.StatusOK,
+				Message: "OK",
+				Data: dto.CreateAccountResponse{
+					Account: &dto.AccountResponse{
+						ID:            "acc-123",
+						AccountNumber: "PAY123456789",
+						Balance:       0.0,
+					},
+				},
+			},
 		},
 		{
 			name:   "error - unauthorized",
@@ -54,7 +64,7 @@ func TestServer_CreatePaymentAccount(t *testing.T) {
 				// No mock setup needed
 			},
 			expectedStatus: http.StatusUnauthorized,
-			expectedBody:   `{"error":"unauthorized"}`,
+			expectedResponse: dto.UnauthorizedResponse,
 		},
 		{
 			name:   "error - service fails",
@@ -68,7 +78,7 @@ func TestServer_CreatePaymentAccount(t *testing.T) {
 					Once()
 			},
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `{"message":"Bad Request"}`,
+			expectedResponse: dto.BadRequestResponse,
 		},
 	}
 
@@ -103,18 +113,19 @@ func TestServer_CreatePaymentAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			assert.JSONEq(t, tt.expectedBody, rec.Body.String())
+			expectedJSON, _ := json.Marshal(tt.expectedResponse)
+			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
 		})
 	}
 }
 
 func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 	tests := []struct {
-		name           string
-		userID         string
-		mockSetup      func(*mocks.MockAccountService)
-		expectedStatus int
-		expectedBody   string
+		name             string
+		userID           string
+		mockSetup        func(*mocks.MockAccountService)
+		expectedStatus   int
+		expectedResponse dto.Response
 	}{
 		{
 			name:   "success - create flexible savings account",
@@ -133,8 +144,18 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 					}, nil).
 					Once()
 			},
-			expectedStatus: http.StatusCreated,
-			expectedBody:   `{"account":{"account_id":"acc-123","account_number":"SAV123456789","balance":0}}`,
+			expectedStatus: http.StatusOK,
+			expectedResponse: dto.Response{
+				Status:  http.StatusOK,
+				Message: "OK",
+				Data: dto.CreateAccountResponse{
+					Account: &dto.AccountResponse{
+						ID:            "acc-123",
+						AccountNumber: "SAV123456789",
+						Balance:       0.0,
+					},
+				},
+			},
 		},
 		{
 			name:   "error - unauthorized",
@@ -143,7 +164,7 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 				// No mock setup needed
 			},
 			expectedStatus: http.StatusUnauthorized,
-			expectedBody:   `{"error":"unauthorized"}`,
+			expectedResponse: dto.UnauthorizedResponse,
 		},
 		{
 			name:   "error - service fails",
@@ -157,7 +178,7 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 					Once()
 			},
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `{"message":"Bad Request"}`,
+			expectedResponse: dto.BadRequestResponse,
 		},
 	}
 
@@ -192,19 +213,20 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			assert.JSONEq(t, tt.expectedBody, rec.Body.String())
+			expectedJSON, _ := json.Marshal(tt.expectedResponse)
+			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
 		})
 	}
 }
 
 func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 	tests := []struct {
-		name           string
-		userID         string
-		requestBody    dto.CreateFixedSavingsRequest
-		mockSetup      func(*mocks.MockAccountService)
-		expectedStatus int
-		expectedBody   string
+		name             string
+		userID           string
+		requestBody      dto.CreateFixedSavingsRequest
+		mockSetup        func(*mocks.MockAccountService)
+		expectedStatus   int
+		expectedResponse dto.Response
 	}{
 		{
 			name:   "success - create fixed savings account",
@@ -230,8 +252,20 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 					}, nil).
 					Once()
 			},
-			expectedStatus: http.StatusCreated,
-			expectedBody:   `{"account":{"account_id":"acc-123","account_number":"SAV123456789","balance":0,"interest_rate":1.8,"fixed_term_months":3}}`,
+			expectedStatus: http.StatusOK,
+			expectedResponse: dto.Response{
+				Status:  http.StatusOK,
+				Message: "OK",
+				Data: dto.CreateAccountResponse{
+					Account: &dto.AccountResponse{
+						ID:              "acc-123",
+						AccountNumber:   "SAV123456789",
+						Balance:         0.0,
+						InterestRate:    func() *float64 { rate := 1.8; return &rate }(),
+						FixedTermMonths: func() *int { term := 3; return &term }(),
+					},
+				},
+			},
 		},
 		{
 			name:   "error - unauthorized",
@@ -243,7 +277,7 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 				// No mock setup needed
 			},
 			expectedStatus: http.StatusUnauthorized,
-			expectedBody:   `{"error":"unauthorized"}`,
+			expectedResponse: dto.UnauthorizedResponse,
 		},
 		{
 			name:   "error - invalid request body",
@@ -255,7 +289,7 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 				// No mock setup needed as bind fails
 			},
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `{"error":"invalid request"}`,
+			expectedResponse: dto.BadRequestResponse,
 		},
 		{
 			name:   "error - validation fails",
@@ -267,7 +301,7 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 				// No mock setup needed as validation fails
 			},
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `{"error":"Key: 'CreateFixedSavingsRequest.TermMonths' Error:Field validation for 'TermMonths' failed on the 'oneof' tag"}`,
+			expectedResponse: dto.BadRequestResponse,
 		},
 		{
 			name:   "error - service fails",
@@ -286,7 +320,7 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 					Once()
 			},
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `{"message":"Bad Request"}`,
+			expectedResponse: dto.BadRequestResponse,
 		},
 	}
 
@@ -335,9 +369,8 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			if tt.expectedBody != "" {
-				assert.JSONEq(t, tt.expectedBody, rec.Body.String())
-			}
+			expectedJSON, _ := json.Marshal(tt.expectedResponse)
+			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
 		})
 	}
 }
