@@ -57,7 +57,7 @@ func (a *Authentication) ValidateAccessToken(token string, c echo.Context) (bool
 	if int64(claims["exp"].(float64)) < now {
 		logrus.Error("Token is expired - ValidateAccessToken")
 
-		return false, err
+		return false, errors.New("token expired")
 	}
 
 	// get user_id
