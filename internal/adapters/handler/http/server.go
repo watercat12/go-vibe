@@ -5,7 +5,6 @@ import (
 	"e-wallet/internal/config"
 	"e-wallet/internal/ports"
 	"e-wallet/pkg/logger"
-	"e-wallet/pkg/sentry"
 	"net/http"
 	"strings"
 
@@ -102,18 +101,24 @@ func (s *Server) RegisterHealthCheck(router *echo.Group) {
 	})
 }
 
-func (s *Server) handleError(c echo.Context, err error, status int) error {
+func (s *Server) handleError(c echo.Context, resErr dto.Response) error {
 	s.Logger.Errorw(
-		err.Error(),
+		resErr.Message,
 		zap.String("request_id", s.requestID(c)),
 	)
 
-	if status >= http.StatusInternalServerError {
-		sentry.WithContext(c).Error(err)
-	}
+	return c.JSON(resErr.Status, dto.Response{
+		Status:  resErr.Status,
+		Message: resErr.Message,
+		Data:    nil,
+	})
+}
 
-	return c.JSON(status, map[string]string{
-		"message": http.StatusText(status),
+func (s *Server) handleSuccess(c echo.Context, data any) error {
+	return c.JSON(http.StatusOK, dto.Response{
+		Status:  http.StatusOK,
+		Message: http.StatusText(http.StatusOK),
+		Data:    data,
 	})
 }
 

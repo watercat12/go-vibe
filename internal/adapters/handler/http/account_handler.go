@@ -2,7 +2,6 @@ package http
 
 import (
 	"e-wallet/internal/adapters/handler/http/dto"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -10,53 +9,53 @@ import (
 func (s *Server) CreatePaymentAccount(c echo.Context) error {
 	userID, ok := c.Get(UserIDKey).(string)
 	if !ok {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+		return s.handleError(c, dto.UnauthorizedResponse)
 	}
 
 	createdAccount, err := s.AccountService.CreatePaymentAccount(c.Request().Context(), userID)
 	if err != nil {
-		return s.handleError(c, err, http.StatusBadRequest)
+		return s.handleError(c, dto.BadRequestResponse)
 	}
 
 	resp := dto.NewCreateAccountResponse(createdAccount)
-	return c.JSON(http.StatusCreated, resp)
+	return s.handleSuccess(c, resp)
 }
 
 func (s *Server) CreateFlexibleSavingsAccount(c echo.Context) error {
 	userID, ok := c.Get(UserIDKey).(string)
 	if !ok {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+		return s.handleError(c, dto.UnauthorizedResponse)
 	}
 
 	createdAccount, err := s.AccountService.CreateFlexibleSavingsAccount(c.Request().Context(), userID)
 	if err != nil {
-		return s.handleError(c, err, http.StatusBadRequest)
+		return s.handleError(c, dto.BadRequestResponse)
 	}
 
 	resp := dto.NewCreateAccountResponse(createdAccount)
-	return c.JSON(http.StatusCreated, resp)
+	return s.handleSuccess(c, resp)
 }
 
 func (s *Server) CreateFixedSavingsAccount(c echo.Context) error {
 	userID, ok := c.Get(UserIDKey).(string)
 	if !ok {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
+		return s.handleError(c, dto.UnauthorizedResponse)
 	}
 
 	var req dto.CreateFixedSavingsRequest
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+		return s.handleError(c, dto.BadRequestResponse)
 	}
 
 	if err := c.Validate(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return s.handleError(c, dto.BadRequestResponse)
 	}
 
 	createdAccount, err := s.AccountService.CreateFixedSavingsAccount(c.Request().Context(), userID, req.TermMonths)
 	if err != nil {
-		return s.handleError(c, err, http.StatusBadRequest)
+		return s.handleError(c, dto.BadRequestResponse)
 	}
 
 	resp := dto.NewCreateAccountResponse(createdAccount)
-	return c.JSON(http.StatusCreated, resp)
+	return s.handleSuccess(c, resp)
 }
