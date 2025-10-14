@@ -14,10 +14,9 @@ db/migrate:
 TEST_PATH ?= ./internal/adapters/handler/...
 
 unit-test:
-	@mkdir coverage || true
+	@mkdir -p coverage
 	-go test -coverprofile=coverage/coverage.txt.tmp -count=1 $(TEST_PATH)
 	@cat coverage/coverage.txt.tmp | grep -v "mock_" > coverage/coverage.txt
-	@go tool cover -func=coverage/coverage.txt
 	@go tool cover -html=coverage/coverage.txt -o coverage/index-application.html
-split:
+split-reports:
 	./split-html.sh

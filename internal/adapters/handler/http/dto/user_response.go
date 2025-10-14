@@ -49,10 +49,8 @@ func NewUserResponse(user *user.User) *UserResponse {
 	}
 }
 
-func NewCreateUserResponse(token string) *CreateUserResponse {
-	return &CreateUserResponse{
-		Token: token,
-	}
+func NewCreateUserResponse() *CreateUserResponse {
+	return &CreateUserResponse{}
 }
 
 func NewLoginUserResponse(user *user.User, token string) *LoginUserResponse {

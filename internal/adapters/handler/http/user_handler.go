@@ -17,7 +17,7 @@ func (s *Server) CreateUser(c echo.Context) error {
 		return s.handleError(c, dto.BadRequestResponse)
 	}
 
-	createdUser, err := s.UserService.CreateUser(c.Request().Context(), &user.CreateUserRequest{
+	_, err := s.UserService.CreateUser(c.Request().Context(), &user.CreateUserRequest{
 		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,
@@ -26,13 +26,7 @@ func (s *Server) CreateUser(c echo.Context) error {
 		return s.handleError(c, dto.InternalErrorResponse)
 	}
 
-	payload := TokenPayload{UserID: createdUser.ID}
-	token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)
-	if err != nil {
-		return s.handleError(c, dto.InternalErrorResponse)
-	}
-
-	resp := dto.NewCreateUserResponse(token)
+	resp := dto.NewCreateUserResponse()
 	return s.handleSuccess(c, resp)
 }
 
