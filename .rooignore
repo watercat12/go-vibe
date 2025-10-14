@@ -4,3 +4,4 @@
 *.yml
 mocks
 !coverage/index-application.html
+!coverage_reports

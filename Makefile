@@ -11,9 +11,13 @@ local-db:
 db/migrate:
 	go run ./cmd/migrate
 
+TEST_PATH ?= ./internal/adapters/handler/...
+
 unit-test:
 	@mkdir coverage || true
-	-go test -coverprofile=coverage/coverage.txt.tmp -count=1 ./internal/adapters/handler/...
+	-go test -coverprofile=coverage/coverage.txt.tmp -count=1 $(TEST_PATH)
 	@cat coverage/coverage.txt.tmp | grep -v "mock_" > coverage/coverage.txt
 	@go tool cover -func=coverage/coverage.txt
 	@go tool cover -html=coverage/coverage.txt -o coverage/index-application.html
+split:
+	./split-html.sh

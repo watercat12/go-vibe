@@ -1,0 +1,1130 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Go Coverage Report</title>
+		<style>
+			body {
+				font-family: Menlo, monospace;
+			}
+			a {
+				text-decoration: none;
+				color: blue;
+				&:visited {
+					color: blue;
+				}
+			}
+			progress {
+				-webkit-appearance: none;
+				-moz-appearance: none;        
+				appearance: none;
+			}
+			.view .links {
+				font-size: 0.8em;
+				padding: 1rem;
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+			.view .links a:not(:first-child):not(:last-child) {
+				&::after {
+					content: "/";
+					color: black;
+				}
+			}
+			.view .links a:first-child {
+				border: 1px solid gray;
+				border-radius: 4px;
+				background-color: lightgray;
+				padding: 2px 4px;
+			}
+			.view .links *:nth-child(2) {
+				&::before {
+					content: "/";
+					color: black;
+				}
+			}
+			.view .links span {
+				color: black;
+				font-weight: bold;
+			}
+			.view .summary {
+				padding: 0 1rem 2rem 1rem;
+			}
+			.view .summary {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				gap: 1rem;
+			}
+			.view .summary .label {
+				opacity: 0.8;
+			}
+			.view .summary .stmts {
+				border: 1px solid gray;
+				border-radius: 4px;
+				background-color: lightgray;
+				padding: 2px 4px;
+			}
+			.lines {
+				display: grid;
+				grid-template-columns: 3em 3em auto;
+				margin-bottom: 3rem;
+			}
+			.lines .wrapper {
+				display: contents;
+			}
+			.lines .line-number, .lines .covered-count {
+				font-size: 0.5em;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				margin-right: 4px;
+				padding-right: 4px;
+			}
+			.lines .line-number {
+				opacity: 0.8;
+			}
+			.lines .covered-count {
+				background-color: lightgray;
+			}
+			.lines pre {
+				margin: 0;
+				font-size: 1em;
+				line-height: 1.5em;
+				height: 1.5em;
+			}
+			.lines .uncovered {
+				background-color: rgba(255, 0, 0, 0.2);
+			}
+			.lines .covered-count.covered {
+				background-color: rgba(0, 255, 0, 0.2);
+				color: green;
+			}
+			.items {
+				margin: 0 1rem 3rem 1rem;
+				display: grid;
+				grid-template-columns: auto max-content max-content max-content;
+				gap: 1px;
+			}
+			.items .wrapper > * {
+				padding: 8px 1rem;
+				&:not(:first-child) {
+					color: black;
+				}
+			}
+			.items .wrapper.danger > * {
+				background-color: rgba(255, 0, 0, 0.2);
+				--accent-color: red;
+			}
+			.items .wrapper.safe > * {
+				background-color: rgba(0, 255, 0, 0.2);
+				--accent-color: green;
+			}
+			.items .wrapper.warning > * {
+				background-color: rgba(255, 255, 0, 0.2);
+				--accent-color: orange;
+			}
+			progress {
+				border: 1px solid black;
+			  &::-webkit-progress-value {
+					background-color: var(--accent-color);
+				}
+			  &::-moz-progress-value {
+					background-color: var(--accent-color);
+				}
+			  &::-progress-value {
+					background-color: var(--accent-color);
+				}
+			  &::-webkit-progress-bar {
+					background-color: white;
+				}
+			  &::-moz-progress-bar {
+					background-color: white;
+				}
+			  &::-progress-bar {
+					background-color: white;
+				}
+			}
+			.items .wrapper {
+				display: contents;
+				text-align: right;
+				border: 1px solid lightgray;
+			}
+			.items .wrapper .subpath {
+				text-align: left;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div id="bd24451a-49f0-5861-b33e-97bdcb92a53b" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">66.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">130/197</div>
+			</div>
+			
+			<div class="items">
+				
+				<a class="wrapper danger" href="#5040a31d-0f26-5a49-824c-1a2f9aa5ae7b">
+					<div class="subpath">dto</div>
+					<div class="progress"><progress value="0.0" max="100"></progress></div>
+					<div class="percent">0.0%</div>
+					<div class="statements">0/23</div>
+				</a>
+				
+				<a class="wrapper safe" href="#7c554c7d-69de-5b80-bd30-a2bd41d364ef">
+					<div class="subpath">account_handler.go</div>
+					<div class="progress"><progress value="100.0" max="100"></progress></div>
+					<div class="percent">100.0%</div>
+					<div class="statements">29/29</div>
+				</a>
+				
+				<a class="wrapper safe" href="#fb77b9a5-123f-56c1-b2dc-8ae8b6e9712a">
+					<div class="subpath">auth.go</div>
+					<div class="progress"><progress value="100.0" max="100"></progress></div>
+					<div class="percent">100.0%</div>
+					<div class="statements">32/32</div>
+				</a>
+				
+				<a class="wrapper safe" href="#7a74348e-d32c-5bf5-9fdb-82db8b28fdd4">
+					<div class="subpath">jwt.go</div>
+					<div class="progress"><progress value="83.3" max="100"></progress></div>
+					<div class="percent">83.3%</div>
+					<div class="statements">25/30</div>
+				</a>
+				
+				<a class="wrapper danger" href="#9411e5cf-fa91-56e9-819f-c7bd628dd77f">
+					<div class="subpath">options.go</div>
+					<div class="progress"><progress value="0.0" max="100"></progress></div>
+					<div class="percent">0.0%</div>
+					<div class="statements">0/3</div>
+				</a>
+				
+				<a class="wrapper danger" href="#1c74e08a-abce-55ca-b737-878e9f3c365c">
+					<div class="subpath">server.go</div>
+					<div class="progress"><progress value="12.8" max="100"></progress></div>
+					<div class="percent">12.8%</div>
+					<div class="statements">5/39</div>
+				</a>
+				
+				<a class="wrapper safe" href="#9f2fd568-455e-597d-bdac-2f93adde4d13">
+					<div class="subpath">user_handler.go</div>
+					<div class="progress"><progress value="95.1" max="100"></progress></div>
+					<div class="percent">95.1%</div>
+					<div class="statements">39/41</div>
+				</a>
+				
+			</div>
+			
+		</div>
+		
+		<div id="5040a31d-0f26-5a49-824c-1a2f9aa5ae7b" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#5040a31d-0f26-5a49-824c-1a2f9aa5ae7b">dto</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">0.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">0/23</div>
+			</div>
+			
+			<div class="items">
+				
+				<a class="wrapper danger" href="#02138d99-5b7f-5b07-bb68-cd4c540bcc5d">
+					<div class="subpath">account_response.go</div>
+					<div class="progress"><progress value="0.0" max="100"></progress></div>
+					<div class="percent">0.0%</div>
+					<div class="statements">0/2</div>
+				</a>
+				
+				<a class="wrapper danger" href="#d79f2895-f29f-568e-8933-b5649a70745e">
+					<div class="subpath">user_response.go</div>
+					<div class="progress"><progress value="0.0" max="100"></progress></div>
+					<div class="percent">0.0%</div>
+					<div class="statements">0/5</div>
+				</a>
+				
+				<a class="wrapper danger" href="#2aa0fe41-04c4-5dfc-8392-080458d77869">
+					<div class="subpath">validator.go</div>
+					<div class="progress"><progress value="0.0" max="100"></progress></div>
+					<div class="percent">0.0%</div>
+					<div class="statements">0/16</div>
+				</a>
+				
+			</div>
+			
+		</div>
+		
+		<div id="02138d99-5b7f-5b07-bb68-cd4c540bcc5d" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#5040a31d-0f26-5a49-824c-1a2f9aa5ae7b">dto</a>
+				
+				<a href="#02138d99-5b7f-5b07-bb68-cd4c540bcc5d">account_response.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">0.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">0/2</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package dto</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/domain/account"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">type AccountResponse struct {</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line">    ID               string   `json:"account_id"`</pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line">    AccountNumber    string   `json:"account_number"`</pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line">    Balance          float64  `json:"balance"`</pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line">    InterestRate     *float64 `json:"interest_rate,omitempty"`</pre>
+<div class="line-number">12</div><div class="covered-count"></div><pre class="line">    FixedTermMonths  *int     `json:"fixed_term_months,omitempty"`</pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line">type CreateAccountResponse struct {</pre>
+<div class="line-number">16</div><div class="covered-count"></div><pre class="line">    Account *AccountResponse `json:"account"`</pre>
+<div class="line-number">17</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">19</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewAccountResponse(acc *account.Account) *AccountResponse {</pre>
+<div class="line-number">20</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;AccountResponse{</pre>
+<div class="line-number">21</div><div class="covered-count uncovered"></div><pre class="line uncovered">        ID:              acc.ID,</pre>
+<div class="line-number">22</div><div class="covered-count uncovered"></div><pre class="line uncovered">        AccountNumber:   acc.AccountNumber,</pre>
+<div class="line-number">23</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Balance:         acc.Balance,</pre>
+<div class="line-number">24</div><div class="covered-count uncovered"></div><pre class="line uncovered">        InterestRate:    acc.InterestRate,</pre>
+<div class="line-number">25</div><div class="covered-count uncovered"></div><pre class="line uncovered">        FixedTermMonths: acc.FixedTermMonths,</pre>
+<div class="line-number">26</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">27</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">28</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">29</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewCreateAccountResponse(acc *account.Account) *CreateAccountResponse {</pre>
+<div class="line-number">30</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;CreateAccountResponse{</pre>
+<div class="line-number">31</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Account: NewAccountResponse(acc),</pre>
+<div class="line-number">32</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">33</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="d79f2895-f29f-568e-8933-b5649a70745e" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#5040a31d-0f26-5a49-824c-1a2f9aa5ae7b">dto</a>
+				
+				<a href="#d79f2895-f29f-568e-8933-b5649a70745e">user_response.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">0.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">0/5</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package dto</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/domain/user"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "time"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line">type UserResponse struct {</pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line">    ID        string    `json:"id"`</pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line">    Username  string    `json:"username"`</pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line">    Email     string    `json:"email"`</pre>
+<div class="line-number">12</div><div class="covered-count"></div><pre class="line">    CreatedAt time.Time `json:"created_at"`</pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line">    UpdatedAt time.Time `json:"updated_at"`</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">16</div><div class="covered-count"></div><pre class="line">type CreateUserResponse struct {</pre>
+<div class="line-number">17</div><div class="covered-count"></div><pre class="line">    User  *UserResponse `json:"user"`</pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line">    Token string        `json:"token"`</pre>
+<div class="line-number">19</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">20</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">21</div><div class="covered-count"></div><pre class="line">type LoginUserResponse struct {</pre>
+<div class="line-number">22</div><div class="covered-count"></div><pre class="line">    User  *UserResponse `json:"user"`</pre>
+<div class="line-number">23</div><div class="covered-count"></div><pre class="line">    Token string        `json:"token"`</pre>
+<div class="line-number">24</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">25</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">26</div><div class="covered-count"></div><pre class="line">type UpdateProfileResponse struct {</pre>
+<div class="line-number">27</div><div class="covered-count"></div><pre class="line">    Profile *ProfileResponse `json:"profile"`</pre>
+<div class="line-number">28</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">29</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">30</div><div class="covered-count"></div><pre class="line">type ProfileResponse struct {</pre>
+<div class="line-number">31</div><div class="covered-count"></div><pre class="line">    ID          string `json:"id"`</pre>
+<div class="line-number">32</div><div class="covered-count"></div><pre class="line">    UserID      string `json:"user_id"`</pre>
+<div class="line-number">33</div><div class="covered-count"></div><pre class="line">    DisplayName string `json:"display_name"`</pre>
+<div class="line-number">34</div><div class="covered-count"></div><pre class="line">    AvatarURL   string `json:"avatar_url"`</pre>
+<div class="line-number">35</div><div class="covered-count"></div><pre class="line">    PhoneNumber string `json:"phone_number"`</pre>
+<div class="line-number">36</div><div class="covered-count"></div><pre class="line">    NationalID  string `json:"national_id"`</pre>
+<div class="line-number">37</div><div class="covered-count"></div><pre class="line">    BirthYear   int    `json:"birth_year"`</pre>
+<div class="line-number">38</div><div class="covered-count"></div><pre class="line">    Gender      string `json:"gender"`</pre>
+<div class="line-number">39</div><div class="covered-count"></div><pre class="line">    Team        string `json:"team"`</pre>
+<div class="line-number">40</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">41</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">42</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewUserResponse(user *user.User) *UserResponse {</pre>
+<div class="line-number">43</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;UserResponse{</pre>
+<div class="line-number">44</div><div class="covered-count uncovered"></div><pre class="line uncovered">        ID:        user.ID,</pre>
+<div class="line-number">45</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Username:  user.Username,</pre>
+<div class="line-number">46</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Email:     user.Email,</pre>
+<div class="line-number">47</div><div class="covered-count uncovered"></div><pre class="line uncovered">        CreatedAt: user.CreatedAt,</pre>
+<div class="line-number">48</div><div class="covered-count uncovered"></div><pre class="line uncovered">        UpdatedAt: user.UpdatedAt,</pre>
+<div class="line-number">49</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">50</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">51</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">52</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewCreateUserResponse(token string) *CreateUserResponse {</pre>
+<div class="line-number">53</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;CreateUserResponse{</pre>
+<div class="line-number">54</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Token: token,</pre>
+<div class="line-number">55</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">56</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">57</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">58</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewLoginUserResponse(user *user.User, token string) *LoginUserResponse {</pre>
+<div class="line-number">59</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;LoginUserResponse{</pre>
+<div class="line-number">60</div><div class="covered-count uncovered"></div><pre class="line uncovered">        User:  NewUserResponse(user),</pre>
+<div class="line-number">61</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Token: token,</pre>
+<div class="line-number">62</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">63</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">64</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">65</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewUpdateProfileResponse(profile *user.Profile) *UpdateProfileResponse {</pre>
+<div class="line-number">66</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;UpdateProfileResponse{</pre>
+<div class="line-number">67</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Profile: NewProfileResponse(profile),</pre>
+<div class="line-number">68</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">69</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">70</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">71</div><div class="covered-count uncovered"></div><pre class="line uncovered">func NewProfileResponse(profile *user.Profile) *ProfileResponse {</pre>
+<div class="line-number">72</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;ProfileResponse{</pre>
+<div class="line-number">73</div><div class="covered-count uncovered"></div><pre class="line uncovered">        ID:          profile.ID,</pre>
+<div class="line-number">74</div><div class="covered-count uncovered"></div><pre class="line uncovered">        UserID:      profile.UserID,</pre>
+<div class="line-number">75</div><div class="covered-count uncovered"></div><pre class="line uncovered">        DisplayName: profile.DisplayName,</pre>
+<div class="line-number">76</div><div class="covered-count uncovered"></div><pre class="line uncovered">        AvatarURL:   profile.AvatarURL,</pre>
+<div class="line-number">77</div><div class="covered-count uncovered"></div><pre class="line uncovered">        PhoneNumber: profile.PhoneNumber,</pre>
+<div class="line-number">78</div><div class="covered-count uncovered"></div><pre class="line uncovered">        NationalID:  profile.NationalID,</pre>
+<div class="line-number">79</div><div class="covered-count uncovered"></div><pre class="line uncovered">        BirthYear:   profile.BirthYear,</pre>
+<div class="line-number">80</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Gender:      profile.Gender,</pre>
+<div class="line-number">81</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Team:        profile.Team,</pre>
+<div class="line-number">82</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">83</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">84</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="2aa0fe41-04c4-5dfc-8392-080458d77869" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#5040a31d-0f26-5a49-824c-1a2f9aa5ae7b">dto</a>
+				
+				<a href="#2aa0fe41-04c4-5dfc-8392-080458d77869">validator.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">0.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">0/16</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package dto</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "regexp"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "strings"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">    "github.com/go-playground/validator/v10"</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line">var passwordRegex = regexp.MustCompile(`^[a-zA-Z0-9@!$%^]{12,50}$`)</pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">12</div><div class="covered-count uncovered"></div><pre class="line uncovered">func ValidatePassword(fl validator.FieldLevel) bool {</pre>
+<div class="line-number">13</div><div class="covered-count uncovered"></div><pre class="line uncovered">    password := fl.Field().String()</pre>
+<div class="line-number">14</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">15</div><div class="covered-count uncovered"></div><pre class="line uncovered">    if len(password) &lt; 12 || len(password) &gt; 50 {</pre>
+<div class="line-number">16</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return false</pre>
+<div class="line-number">17</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">19</div><div class="covered-count uncovered"></div><pre class="line uncovered">    hasLower := strings.ContainsAny(password, "abcdefghijklmnopqrstuvwxyz")</pre>
+<div class="line-number">20</div><div class="covered-count uncovered"></div><pre class="line uncovered">    hasUpper := strings.ContainsAny(password, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")</pre>
+<div class="line-number">21</div><div class="covered-count uncovered"></div><pre class="line uncovered">    hasDigit := strings.ContainsAny(password, "0123456789")</pre>
+<div class="line-number">22</div><div class="covered-count uncovered"></div><pre class="line uncovered">    hasSpecial := strings.ContainsAny(password, "@!$%^")</pre>
+<div class="line-number">23</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">24</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return hasLower &amp;&amp; hasUpper &amp;&amp; hasDigit &amp;&amp; hasSpecial</pre>
+<div class="line-number">25</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">26</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">27</div><div class="covered-count uncovered"></div><pre class="line uncovered">func ValidateTeam(fl validator.FieldLevel) bool {</pre>
+<div class="line-number">28</div><div class="covered-count uncovered"></div><pre class="line uncovered">    team := fl.Field().String()</pre>
+<div class="line-number">29</div><div class="covered-count uncovered"></div><pre class="line uncovered">    validTeams := []string{"Front End", "Back End", "QA", "Admin", "Brse", "Design", "Others"}</pre>
+<div class="line-number">30</div><div class="covered-count uncovered"></div><pre class="line uncovered">    for _, validTeam := range validTeams {</pre>
+<div class="line-number">31</div><div class="covered-count uncovered"></div><pre class="line uncovered">        if team == validTeam {</pre>
+<div class="line-number">32</div><div class="covered-count uncovered"></div><pre class="line uncovered">            return true</pre>
+<div class="line-number">33</div><div class="covered-count uncovered"></div><pre class="line uncovered">        }</pre>
+<div class="line-number">34</div><div class="covered-count"></div><pre class="line">    }</pre>
+<div class="line-number">35</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return false</pre>
+<div class="line-number">36</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">37</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">38</div><div class="covered-count uncovered"></div><pre class="line uncovered">func RegisterCustomValidations(v *validator.Validate) {</pre>
+<div class="line-number">39</div><div class="covered-count uncovered"></div><pre class="line uncovered">    v.RegisterValidation("password", ValidatePassword)</pre>
+<div class="line-number">40</div><div class="covered-count uncovered"></div><pre class="line uncovered">    v.RegisterValidation("team", ValidateTeam)</pre>
+<div class="line-number">41</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="7c554c7d-69de-5b80-bd30-a2bd41d364ef" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#7c554c7d-69de-5b80-bd30-a2bd41d364ef">account_handler.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">100.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">29/29</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/adapters/handler/http/dto"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4"</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">9</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) CreatePaymentAccount(c echo.Context) error {</pre>
+<div class="line-number">10</div><div class="covered-count covered">1x</div><pre class="line covered">    userID, ok := c.Get(UserIDKey).(string)</pre>
+<div class="line-number">11</div><div class="covered-count covered">1x</div><pre class="line covered">    if !ok {</pre>
+<div class="line-number">12</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.UnauthorizedResponse)</pre>
+<div class="line-number">13</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">15</div><div class="covered-count covered">1x</div><pre class="line covered">    createdAccount, err := s.AccountService.CreatePaymentAccount(c.Request().Context(), userID)</pre>
+<div class="line-number">16</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">17</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">18</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">19</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">20</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewCreateAccountResponse(createdAccount)</pre>
+<div class="line-number">21</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">22</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">23</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">24</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) CreateFlexibleSavingsAccount(c echo.Context) error {</pre>
+<div class="line-number">25</div><div class="covered-count covered">1x</div><pre class="line covered">    userID, ok := c.Get(UserIDKey).(string)</pre>
+<div class="line-number">26</div><div class="covered-count covered">1x</div><pre class="line covered">    if !ok {</pre>
+<div class="line-number">27</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.UnauthorizedResponse)</pre>
+<div class="line-number">28</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">29</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">30</div><div class="covered-count covered">1x</div><pre class="line covered">    createdAccount, err := s.AccountService.CreateFlexibleSavingsAccount(c.Request().Context(), userID)</pre>
+<div class="line-number">31</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">32</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">33</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">34</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">35</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewCreateAccountResponse(createdAccount)</pre>
+<div class="line-number">36</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">37</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">38</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">39</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) CreateFixedSavingsAccount(c echo.Context) error {</pre>
+<div class="line-number">40</div><div class="covered-count covered">1x</div><pre class="line covered">    userID, ok := c.Get(UserIDKey).(string)</pre>
+<div class="line-number">41</div><div class="covered-count covered">1x</div><pre class="line covered">    if !ok {</pre>
+<div class="line-number">42</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.UnauthorizedResponse)</pre>
+<div class="line-number">43</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">44</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">45</div><div class="covered-count covered">1x</div><pre class="line covered">    var req dto.CreateFixedSavingsRequest</pre>
+<div class="line-number">46</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Bind(&amp;req); err != nil {</pre>
+<div class="line-number">47</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">48</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">49</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">50</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Validate(&amp;req); err != nil {</pre>
+<div class="line-number">51</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">52</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">53</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">54</div><div class="covered-count covered">1x</div><pre class="line covered">    createdAccount, err := s.AccountService.CreateFixedSavingsAccount(c.Request().Context(), userID, req.TermMonths)</pre>
+<div class="line-number">55</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">56</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">57</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">58</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">59</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewCreateAccountResponse(createdAccount)</pre>
+<div class="line-number">60</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">61</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">62</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="fb77b9a5-123f-56c1-b2dc-8ae8b6e9712a" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#fb77b9a5-123f-56c1-b2dc-8ae8b6e9712a">auth.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">100.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">32/32</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "errors"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "os"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">    "strings"</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">    "time"</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4"</pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4/middleware"</pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line">    "github.com/sirupsen/logrus"</pre>
+<div class="line-number">12</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line">const (</pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line">    UserClaimKey = "UserClaimKey"</pre>
+<div class="line-number">16</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">17</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line">type Authentication struct {</pre>
+<div class="line-number">19</div><div class="covered-count"></div><pre class="line">    SkipperPath []string</pre>
+<div class="line-number">20</div><div class="covered-count"></div><pre class="line">    KeyLookup   string</pre>
+<div class="line-number">21</div><div class="covered-count"></div><pre class="line">    AuthScheme  string</pre>
+<div class="line-number">22</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">23</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">24</div><div class="covered-count covered">1x</div><pre class="line covered">func NewAuthentication(keyLookup string, authScheme string, skipperPath []string) *Authentication {</pre>
+<div class="line-number">25</div><div class="covered-count covered">1x</div><pre class="line covered">    return &amp;Authentication{</pre>
+<div class="line-number">26</div><div class="covered-count covered">1x</div><pre class="line covered">        SkipperPath: skipperPath,</pre>
+<div class="line-number">27</div><div class="covered-count covered">1x</div><pre class="line covered">        KeyLookup:   keyLookup,</pre>
+<div class="line-number">28</div><div class="covered-count covered">1x</div><pre class="line covered">        AuthScheme:  authScheme,</pre>
+<div class="line-number">29</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">30</div><div class="covered-count covered">1x</div><pre class="line covered">}</pre>
+<div class="line-number">31</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">32</div><div class="covered-count covered">1x</div><pre class="line covered">func (a *Authentication) Middleware() echo.MiddlewareFunc {</pre>
+<div class="line-number">33</div><div class="covered-count covered">1x</div><pre class="line covered">    skipper := func(c echo.Context) bool {</pre>
+<div class="line-number">34</div><div class="covered-count covered">1x</div><pre class="line covered">        return ContainFirst(a.SkipperPath, c.Path())</pre>
+<div class="line-number">35</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">36</div><div class="covered-count covered">1x</div><pre class="line covered">    return middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{</pre>
+<div class="line-number">37</div><div class="covered-count covered">1x</div><pre class="line covered">        Skipper:    skipper,</pre>
+<div class="line-number">38</div><div class="covered-count covered">1x</div><pre class="line covered">        KeyLookup:  a.KeyLookup,</pre>
+<div class="line-number">39</div><div class="covered-count covered">1x</div><pre class="line covered">        AuthScheme: a.AuthScheme,</pre>
+<div class="line-number">40</div><div class="covered-count covered">1x</div><pre class="line covered">        Validator:  a.ValidateAccessToken,</pre>
+<div class="line-number">41</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">42</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">43</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">44</div><div class="covered-count covered">1x</div><pre class="line covered">func (a *Authentication) ValidateAccessToken(token string, c echo.Context) (bool, error) {</pre>
+<div class="line-number">45</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">46</div><div class="covered-count covered">1x</div><pre class="line covered">    if token == "" {</pre>
+<div class="line-number">47</div><div class="covered-count covered">1x</div><pre class="line covered">        return false, errors.New("")</pre>
+<div class="line-number">48</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">49</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">50</div><div class="covered-count covered">1x</div><pre class="line covered">    claims, err := ValidateToken(token, os.Getenv("JWT_SECRET_KEY"))</pre>
+<div class="line-number">51</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">52</div><div class="covered-count covered">1x</div><pre class="line covered">        return false, err</pre>
+<div class="line-number">53</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">54</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">55</div><div class="covered-count"></div><pre class="line">    // check expired time</pre>
+<div class="line-number">56</div><div class="covered-count covered">1x</div><pre class="line covered">    now := time.Now().Local().Unix()</pre>
+<div class="line-number">57</div><div class="covered-count covered">1x</div><pre class="line covered">    if int64(claims["exp"].(float64)) &lt; now {</pre>
+<div class="line-number">58</div><div class="covered-count covered">1x</div><pre class="line covered">        logrus.Error("Token is expired - ValidateAccessToken")</pre>
+<div class="line-number">59</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">60</div><div class="covered-count covered">1x</div><pre class="line covered">        return false, errors.New("token expired")</pre>
+<div class="line-number">61</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">62</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">63</div><div class="covered-count"></div><pre class="line">    // get user_id</pre>
+<div class="line-number">64</div><div class="covered-count covered">1x</div><pre class="line covered">    payload, err := DecodeToken(claims)</pre>
+<div class="line-number">65</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">66</div><div class="covered-count covered">1x</div><pre class="line covered">        logrus.Error(err)</pre>
+<div class="line-number">67</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">68</div><div class="covered-count covered">1x</div><pre class="line covered">        return false, err</pre>
+<div class="line-number">69</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">70</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">71</div><div class="covered-count covered">1x</div><pre class="line covered">    if payload.UserID == "" {</pre>
+<div class="line-number">72</div><div class="covered-count covered">1x</div><pre class="line covered">        logrus.Error("Unauthorized")</pre>
+<div class="line-number">73</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">74</div><div class="covered-count covered">1x</div><pre class="line covered">        return false, errors.New("")</pre>
+<div class="line-number">75</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">76</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">77</div><div class="covered-count covered">1x</div><pre class="line covered">    c.Set(UserClaimKey, payload)</pre>
+<div class="line-number">78</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">79</div><div class="covered-count covered">1x</div><pre class="line covered">    return true, nil</pre>
+<div class="line-number">80</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">81</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">82</div><div class="covered-count covered">1x</div><pre class="line covered">func ContainFirst(elems []string, v string) bool {</pre>
+<div class="line-number">83</div><div class="covered-count covered">1x</div><pre class="line covered">    for _, s := range elems {</pre>
+<div class="line-number">84</div><div class="covered-count covered">1x</div><pre class="line covered">        if strings.HasPrefix(v, s) {</pre>
+<div class="line-number">85</div><div class="covered-count covered">1x</div><pre class="line covered">            return true</pre>
+<div class="line-number">86</div><div class="covered-count covered">1x</div><pre class="line covered">        }</pre>
+<div class="line-number">87</div><div class="covered-count"></div><pre class="line">    }</pre>
+<div class="line-number">88</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">89</div><div class="covered-count covered">1x</div><pre class="line covered">    return false</pre>
+<div class="line-number">90</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">91</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">92</div><div class="covered-count"></div><pre class="line">const UserIDKey = "UserID"</pre>
+<div class="line-number">93</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">94</div><div class="covered-count covered">1x</div><pre class="line covered">func CheckUserTypeMiddleware() echo.MiddlewareFunc {</pre>
+<div class="line-number">95</div><div class="covered-count covered">1x</div><pre class="line covered">    return func(next echo.HandlerFunc) echo.HandlerFunc {</pre>
+<div class="line-number">96</div><div class="covered-count covered">1x</div><pre class="line covered">        return func(c echo.Context) error {</pre>
+<div class="line-number">97</div><div class="covered-count covered">1x</div><pre class="line covered">            userClaim, ok := c.Get(UserClaimKey).(*TokenPayload)</pre>
+<div class="line-number">98</div><div class="covered-count covered">1x</div><pre class="line covered">            if !ok {</pre>
+<div class="line-number">99</div><div class="covered-count covered">1x</div><pre class="line covered">                // return echo.NewHTTPError(http.StatusUnauthorized, "Invalid user")</pre>
+<div class="line-number">100</div><div class="covered-count covered">1x</div><pre class="line covered">            } else {</pre>
+<div class="line-number">101</div><div class="covered-count covered">1x</div><pre class="line covered">                c.Set(UserIDKey, userClaim.UserID)</pre>
+<div class="line-number">102</div><div class="covered-count covered">1x</div><pre class="line covered">            }</pre>
+<div class="line-number">103</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">104</div><div class="covered-count covered">1x</div><pre class="line covered">            return next(c)</pre>
+<div class="line-number">105</div><div class="covered-count"></div><pre class="line">        }</pre>
+<div class="line-number">106</div><div class="covered-count"></div><pre class="line">    }</pre>
+<div class="line-number">107</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">108</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="7a74348e-d32c-5bf5-9fdb-82db8b28fdd4" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#7a74348e-d32c-5bf5-9fdb-82db8b28fdd4">jwt.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">83.3%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">25/30</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "encoding/json"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "fmt"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">    "net/http"</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">    "time"</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line">    jwt "github.com/golang-jwt/jwt/v5"</pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4"</pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">12</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line">const DefaultExpiredTime = 30 * 24 * time.Hour // 30 days</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line">type TokenPayload struct {</pre>
+<div class="line-number">16</div><div class="covered-count"></div><pre class="line">    UserID string `json:"user_id"`</pre>
+<div class="line-number">17</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">19</div><div class="covered-count covered">1x</div><pre class="line covered">func CreateAccessToken(ttl time.Duration, payload TokenPayload, secretJWTKey string) (string, error) {</pre>
+<div class="line-number">20</div><div class="covered-count covered">1x</div><pre class="line covered">    token := jwt.New(jwt.SigningMethodHS256)</pre>
+<div class="line-number">21</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">22</div><div class="covered-count covered">1x</div><pre class="line covered">    now := time.Now().UTC()</pre>
+<div class="line-number">23</div><div class="covered-count covered">1x</div><pre class="line covered">    claims := token.Claims.(jwt.MapClaims)</pre>
+<div class="line-number">24</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">25</div><div class="covered-count covered">1x</div><pre class="line covered">    claims["sub"] = payload</pre>
+<div class="line-number">26</div><div class="covered-count covered">1x</div><pre class="line covered">    claims["exp"] = now.Add(ttl).Unix()</pre>
+<div class="line-number">27</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">28</div><div class="covered-count covered">1x</div><pre class="line covered">    tokenString, err := token.SignedString([]byte(secretJWTKey))</pre>
+<div class="line-number">29</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">30</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">31</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return "", err</pre>
+<div class="line-number">32</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">33</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">34</div><div class="covered-count covered">1x</div><pre class="line covered">    return tokenString, nil</pre>
+<div class="line-number">35</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">36</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">37</div><div class="covered-count covered">1x</div><pre class="line covered">func ValidateToken(token string, secretJWTKey string) (jwt.MapClaims, error) {</pre>
+<div class="line-number">38</div><div class="covered-count covered">1x</div><pre class="line covered">    parseToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {</pre>
+<div class="line-number">39</div><div class="covered-count covered">1x</div><pre class="line covered">        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {</pre>
+<div class="line-number">40</div><div class="covered-count uncovered"></div><pre class="line uncovered">            return nil, echo.NewHTTPError(http.StatusForbidden, "Unexpected signing method: %v", token.Header["alg"])</pre>
+<div class="line-number">41</div><div class="covered-count uncovered"></div><pre class="line uncovered">        }</pre>
+<div class="line-number">42</div><div class="covered-count covered">1x</div><pre class="line covered">        signature := []byte(secretJWTKey)</pre>
+<div class="line-number">43</div><div class="covered-count covered">1x</div><pre class="line covered">        return signature, nil</pre>
+<div class="line-number">44</div><div class="covered-count"></div><pre class="line">    })</pre>
+<div class="line-number">45</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">46</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">47</div><div class="covered-count covered">1x</div><pre class="line covered">        return nil, err</pre>
+<div class="line-number">48</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">49</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">50</div><div class="covered-count covered">1x</div><pre class="line covered">    claims, ok := parseToken.Claims.(jwt.MapClaims)</pre>
+<div class="line-number">51</div><div class="covered-count covered">1x</div><pre class="line covered">    if ok &amp;&amp; parseToken.Valid {</pre>
+<div class="line-number">52</div><div class="covered-count covered">1x</div><pre class="line covered">        return claims, nil</pre>
+<div class="line-number">53</div><div class="covered-count covered">1x</div><pre class="line covered">    } else {</pre>
+<div class="line-number">54</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return nil, fmt.Errorf("invalid token")</pre>
+<div class="line-number">55</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">56</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">57</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">58</div><div class="covered-count covered">1x</div><pre class="line covered">func DecodeToken(claims jwt.MapClaims) (*TokenPayload, error) {</pre>
+<div class="line-number">59</div><div class="covered-count covered">1x</div><pre class="line covered">    // get data from token</pre>
+<div class="line-number">60</div><div class="covered-count covered">1x</div><pre class="line covered">    sub, ok := claims["sub"]</pre>
+<div class="line-number">61</div><div class="covered-count covered">1x</div><pre class="line covered">    if !ok {</pre>
+<div class="line-number">62</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return nil, fmt.Errorf("missing sub")</pre>
+<div class="line-number">63</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">64</div><div class="covered-count"></div><pre class="line">    // Convert the map to JSON</pre>
+<div class="line-number">65</div><div class="covered-count covered">1x</div><pre class="line covered">    jsonData, err := json.Marshal(sub)</pre>
+<div class="line-number">66</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">67</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return nil, err</pre>
+<div class="line-number">68</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">69</div><div class="covered-count"></div><pre class="line">    // Convert the JSON to a struct</pre>
+<div class="line-number">70</div><div class="covered-count covered">1x</div><pre class="line covered">    var payload TokenPayload</pre>
+<div class="line-number">71</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := json.Unmarshal(jsonData, &amp;payload); err != nil {</pre>
+<div class="line-number">72</div><div class="covered-count covered">1x</div><pre class="line covered">        return nil, err</pre>
+<div class="line-number">73</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">74</div><div class="covered-count covered">1x</div><pre class="line covered">    return &amp;payload, nil</pre>
+<div class="line-number">75</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">76</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="9411e5cf-fa91-56e9-819f-c7bd628dd77f" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#9411e5cf-fa91-56e9-819f-c7bd628dd77f">options.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">0.0%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">0/3</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import "e-wallet/internal/config"</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">type Options func(s *Server) error</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">8</div><div class="covered-count uncovered"></div><pre class="line uncovered">func WithConfig(cfg *config.Config) Options {</pre>
+<div class="line-number">9</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return func(s *Server) error {</pre>
+<div class="line-number">10</div><div class="covered-count uncovered"></div><pre class="line uncovered">        s.Config = cfg</pre>
+<div class="line-number">11</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return nil</pre>
+<div class="line-number">12</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="1c74e08a-abce-55ca-b737-878e9f3c365c" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#1c74e08a-abce-55ca-b737-878e9f3c365c">server.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">12.8%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">5/39</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/adapters/handler/http/dto"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/config"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/ports"</pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">    "e-wallet/pkg/logger"</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line">    "net/http"</pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line">    "strings"</pre>
+<div class="line-number">10</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">11</div><div class="covered-count"></div><pre class="line">    sentryecho "github.com/getsentry/sentry-go/echo"</pre>
+<div class="line-number">12</div><div class="covered-count"></div><pre class="line">    "github.com/go-playground/validator/v10"</pre>
+<div class="line-number">13</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4"</pre>
+<div class="line-number">14</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4/middleware"</pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line">    "go.uber.org/zap"</pre>
+<div class="line-number">16</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">17</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">18</div><div class="covered-count"></div><pre class="line">type Server struct {</pre>
+<div class="line-number">19</div><div class="covered-count"></div><pre class="line">    Router *echo.Echo</pre>
+<div class="line-number">20</div><div class="covered-count"></div><pre class="line">    Config *config.Config</pre>
+<div class="line-number">21</div><div class="covered-count"></div><pre class="line">    Logger *zap.SugaredLogger</pre>
+<div class="line-number">22</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">23</div><div class="covered-count"></div><pre class="line">    // service layers</pre>
+<div class="line-number">24</div><div class="covered-count"></div><pre class="line">    UserService    ports.UserService</pre>
+<div class="line-number">25</div><div class="covered-count"></div><pre class="line">    AccountService ports.AccountService</pre>
+<div class="line-number">26</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">27</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">28</div><div class="covered-count"></div><pre class="line">type CustomValidator struct {</pre>
+<div class="line-number">29</div><div class="covered-count"></div><pre class="line">    validator *validator.Validate</pre>
+<div class="line-number">30</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">31</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">32</div><div class="covered-count covered">1x</div><pre class="line covered">func (cv *CustomValidator) Validate(i interface{}) error {</pre>
+<div class="line-number">33</div><div class="covered-count covered">1x</div><pre class="line covered">    return cv.validator.Struct(i)</pre>
+<div class="line-number">34</div><div class="covered-count covered">1x</div><pre class="line covered">}</pre>
+<div class="line-number">35</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">36</div><div class="covered-count uncovered"></div><pre class="line uncovered">func New(options ...Options) (*Server, error) {</pre>
+<div class="line-number">37</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s := Server{</pre>
+<div class="line-number">38</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Router: echo.New(),</pre>
+<div class="line-number">39</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Config: config.Empty,</pre>
+<div class="line-number">40</div><div class="covered-count uncovered"></div><pre class="line uncovered">        Logger: logger.NOOPLogger,</pre>
+<div class="line-number">41</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">42</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">43</div><div class="covered-count uncovered"></div><pre class="line uncovered">    v := validator.New()</pre>
+<div class="line-number">44</div><div class="covered-count uncovered"></div><pre class="line uncovered">    dto.RegisterCustomValidations(v)</pre>
+<div class="line-number">45</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Validator = &amp;CustomValidator{validator: v}</pre>
+<div class="line-number">46</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">47</div><div class="covered-count uncovered"></div><pre class="line uncovered">    for _, fn := range options {</pre>
+<div class="line-number">48</div><div class="covered-count uncovered"></div><pre class="line uncovered">        if err := fn(&amp;s); err != nil {</pre>
+<div class="line-number">49</div><div class="covered-count uncovered"></div><pre class="line uncovered">            return nil, err</pre>
+<div class="line-number">50</div><div class="covered-count uncovered"></div><pre class="line uncovered">        }</pre>
+<div class="line-number">51</div><div class="covered-count"></div><pre class="line">    }</pre>
+<div class="line-number">52</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">53</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.RegisterGlobalMiddlewares()</pre>
+<div class="line-number">54</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.RegisterAuthMiddlewares()</pre>
+<div class="line-number">55</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.RegisterUserClaimsMiddlewares()</pre>
+<div class="line-number">56</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.RegisterRoute()</pre>
+<div class="line-number">57</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">58</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.RegisterHealthCheck(s.Router.Group(""))</pre>
+<div class="line-number">59</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">60</div><div class="covered-count uncovered"></div><pre class="line uncovered">    return &amp;s, nil</pre>
+<div class="line-number">61</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">62</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">63</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) RegisterGlobalMiddlewares() {</pre>
+<div class="line-number">64</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(middleware.Recover())</pre>
+<div class="line-number">65</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(middleware.Secure())</pre>
+<div class="line-number">66</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(middleware.RequestID())</pre>
+<div class="line-number">67</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(middleware.Gzip())</pre>
+<div class="line-number">68</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(sentryecho.New(sentryecho.Options{Repanic: true}))</pre>
+<div class="line-number">69</div><div class="covered-count uncovered"></div><pre class="line uncovered"></pre>
+<div class="line-number">70</div><div class="covered-count uncovered"></div><pre class="line uncovered">    // CORS</pre>
+<div class="line-number">71</div><div class="covered-count uncovered"></div><pre class="line uncovered">    if s.Config.AllowOrigins != "" {</pre>
+<div class="line-number">72</div><div class="covered-count uncovered"></div><pre class="line uncovered">        aos := strings.Split(s.Config.AllowOrigins, ",")</pre>
+<div class="line-number">73</div><div class="covered-count uncovered"></div><pre class="line uncovered">        s.Router.Use(middleware.CORSWithConfig(middleware.CORSConfig{</pre>
+<div class="line-number">74</div><div class="covered-count uncovered"></div><pre class="line uncovered">            AllowOrigins: aos,</pre>
+<div class="line-number">75</div><div class="covered-count uncovered"></div><pre class="line uncovered">        }))</pre>
+<div class="line-number">76</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">77</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">78</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">79</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) RegisterAuthMiddlewares() {</pre>
+<div class="line-number">80</div><div class="covered-count uncovered"></div><pre class="line uncovered">    skipperPath := []string{</pre>
+<div class="line-number">81</div><div class="covered-count uncovered"></div><pre class="line uncovered">        "/healthz",</pre>
+<div class="line-number">82</div><div class="covered-count uncovered"></div><pre class="line uncovered">        "/api/auth",</pre>
+<div class="line-number">83</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">84</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())</pre>
+<div class="line-number">85</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">86</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">87</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) RegisterUserClaimsMiddlewares() {</pre>
+<div class="line-number">88</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.Use(CheckUserTypeMiddleware())</pre>
+<div class="line-number">89</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">90</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">91</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {</pre>
+<div class="line-number">92</div><div class="covered-count uncovered"></div><pre class="line uncovered">    s.Router.ServeHTTP(w, r)</pre>
+<div class="line-number">93</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">94</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">95</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) RegisterHealthCheck(router *echo.Group) {</pre>
+<div class="line-number">96</div><div class="covered-count uncovered"></div><pre class="line uncovered">    router.GET("/healthz", func(c echo.Context) error {</pre>
+<div class="line-number">97</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return c.JSON(http.StatusOK, map[string]string{</pre>
+<div class="line-number">98</div><div class="covered-count uncovered"></div><pre class="line uncovered">            "status":  http.StatusText(http.StatusOK),</pre>
+<div class="line-number">99</div><div class="covered-count uncovered"></div><pre class="line uncovered">            "message": "Service is up and running",</pre>
+<div class="line-number">100</div><div class="covered-count uncovered"></div><pre class="line uncovered">        })</pre>
+<div class="line-number">101</div><div class="covered-count uncovered"></div><pre class="line uncovered">    })</pre>
+<div class="line-number">102</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">103</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">104</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) handleError(c echo.Context, resErr dto.Response) error {</pre>
+<div class="line-number">105</div><div class="covered-count covered">1x</div><pre class="line covered">    s.Logger.Errorw(</pre>
+<div class="line-number">106</div><div class="covered-count covered">1x</div><pre class="line covered">        resErr.Message,</pre>
+<div class="line-number">107</div><div class="covered-count covered">1x</div><pre class="line covered">        zap.String("request_id", s.requestID(c)),</pre>
+<div class="line-number">108</div><div class="covered-count covered">1x</div><pre class="line covered">    )</pre>
+<div class="line-number">109</div><div class="covered-count covered">1x</div><pre class="line covered"></pre>
+<div class="line-number">110</div><div class="covered-count covered">1x</div><pre class="line covered">    return c.JSON(resErr.Status, dto.Response{</pre>
+<div class="line-number">111</div><div class="covered-count covered">1x</div><pre class="line covered">        Status:  resErr.Status,</pre>
+<div class="line-number">112</div><div class="covered-count covered">1x</div><pre class="line covered">        Message: resErr.Message,</pre>
+<div class="line-number">113</div><div class="covered-count covered">1x</div><pre class="line covered">        Data:    nil,</pre>
+<div class="line-number">114</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">115</div><div class="covered-count covered">1x</div><pre class="line covered">}</pre>
+<div class="line-number">116</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">117</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) handleSuccess(c echo.Context, data any) error {</pre>
+<div class="line-number">118</div><div class="covered-count covered">1x</div><pre class="line covered">    return c.JSON(http.StatusOK, dto.Response{</pre>
+<div class="line-number">119</div><div class="covered-count covered">1x</div><pre class="line covered">        Status:  http.StatusOK,</pre>
+<div class="line-number">120</div><div class="covered-count covered">1x</div><pre class="line covered">        Message: http.StatusText(http.StatusOK),</pre>
+<div class="line-number">121</div><div class="covered-count covered">1x</div><pre class="line covered">        Data:    data,</pre>
+<div class="line-number">122</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">123</div><div class="covered-count covered">1x</div><pre class="line covered">}</pre>
+<div class="line-number">124</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">125</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) requestID(c echo.Context) string {</pre>
+<div class="line-number">126</div><div class="covered-count covered">1x</div><pre class="line covered">    return c.Response().Header().Get(echo.HeaderXRequestID)</pre>
+<div class="line-number">127</div><div class="covered-count covered">1x</div><pre class="line covered">}</pre>
+<div class="line-number">128</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">129</div><div class="covered-count uncovered"></div><pre class="line uncovered">func (s *Server) RegisterRoute() {</pre>
+<div class="line-number">130</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup := s.Router.Group("/api")</pre>
+<div class="line-number">131</div><div class="covered-count uncovered"></div><pre class="line uncovered">    // auth</pre>
+<div class="line-number">132</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.POST("/auth/register", s.CreateUser)</pre>
+<div class="line-number">133</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.POST("/auth/login", s.LoginUser)</pre>
+<div class="line-number">134</div><div class="covered-count uncovered"></div><pre class="line uncovered">    // user</pre>
+<div class="line-number">135</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.PUT("/user/profile", s.UpdateProfile)</pre>
+<div class="line-number">136</div><div class="covered-count uncovered"></div><pre class="line uncovered">    // accounts</pre>
+<div class="line-number">137</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)</pre>
+<div class="line-number">138</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)</pre>
+<div class="line-number">139</div><div class="covered-count uncovered"></div><pre class="line uncovered">    apiGroup.POST("/accounts/savings/flexible", s.CreateFlexibleSavingsAccount)</pre>
+<div class="line-number">140</div><div class="covered-count uncovered"></div><pre class="line uncovered">}</pre>
+<div class="line-number">141</div><div class="covered-count"></div><pre class="line"></pre>
+
+			</div>
+			
+		</div>
+		
+		<div id="9f2fd568-455e-597d-bdac-2f93adde4d13" class="view file" style="display:none">
+			<div class="links">
+				
+				<a href="#bd24451a-49f0-5861-b33e-97bdcb92a53b">e-wallet/internal/adapters/handler/http</a>
+				
+				<a href="#9f2fd568-455e-597d-bdac-2f93adde4d13">user_handler.go</a>
+				
+			</div>
+			<div class="summary">
+				<div class="percent">95.1%</div>
+				<div class="label">Statements</div>
+				<div class="stmts">39/41</div>
+			</div>
+			
+			<div class="lines">
+				<div class="line-number">1</div><div class="covered-count"></div><pre class="line">package http</pre>
+<div class="line-number">2</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">3</div><div class="covered-count"></div><pre class="line">import (</pre>
+<div class="line-number">4</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/adapters/handler/http/dto"</pre>
+<div class="line-number">5</div><div class="covered-count"></div><pre class="line">    "e-wallet/internal/domain/user"</pre>
+<div class="line-number">6</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">7</div><div class="covered-count"></div><pre class="line">    "github.com/labstack/echo/v4"</pre>
+<div class="line-number">8</div><div class="covered-count"></div><pre class="line">)</pre>
+<div class="line-number">9</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">10</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) CreateUser(c echo.Context) error {</pre>
+<div class="line-number">11</div><div class="covered-count covered">1x</div><pre class="line covered">    var req dto.CreateUserRequest</pre>
+<div class="line-number">12</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Bind(&amp;req); err != nil {</pre>
+<div class="line-number">13</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">14</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">15</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">16</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Validate(&amp;req); err != nil {</pre>
+<div class="line-number">17</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">18</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">19</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">20</div><div class="covered-count covered">1x</div><pre class="line covered">    createdUser, err := s.UserService.CreateUser(c.Request().Context(), &amp;user.CreateUserRequest{</pre>
+<div class="line-number">21</div><div class="covered-count covered">1x</div><pre class="line covered">        Username: req.Username,</pre>
+<div class="line-number">22</div><div class="covered-count covered">1x</div><pre class="line covered">        Email:    req.Email,</pre>
+<div class="line-number">23</div><div class="covered-count covered">1x</div><pre class="line covered">        Password: req.Password,</pre>
+<div class="line-number">24</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">25</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">26</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.InternalErrorResponse)</pre>
+<div class="line-number">27</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">28</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">29</div><div class="covered-count covered">1x</div><pre class="line covered">    payload := TokenPayload{UserID: createdUser.ID}</pre>
+<div class="line-number">30</div><div class="covered-count covered">1x</div><pre class="line covered">    token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)</pre>
+<div class="line-number">31</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">32</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return s.handleError(c, dto.InternalErrorResponse)</pre>
+<div class="line-number">33</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">34</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">35</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewCreateUserResponse(token)</pre>
+<div class="line-number">36</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">37</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">38</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">39</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) LoginUser(c echo.Context) error {</pre>
+<div class="line-number">40</div><div class="covered-count covered">1x</div><pre class="line covered">    var req dto.LoginUserRequest</pre>
+<div class="line-number">41</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Bind(&amp;req); err != nil {</pre>
+<div class="line-number">42</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">43</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">44</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">45</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Validate(&amp;req); err != nil {</pre>
+<div class="line-number">46</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">47</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">48</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">49</div><div class="covered-count covered">1x</div><pre class="line covered">    user, err := s.UserService.LoginUser(c.Request().Context(), &amp;user.LoginUserRequest{</pre>
+<div class="line-number">50</div><div class="covered-count covered">1x</div><pre class="line covered">        Email:    req.Email,</pre>
+<div class="line-number">51</div><div class="covered-count covered">1x</div><pre class="line covered">        Password: req.Password,</pre>
+<div class="line-number">52</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">53</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">54</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.UnauthorizedResponse)</pre>
+<div class="line-number">55</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">56</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">57</div><div class="covered-count covered">1x</div><pre class="line covered">    payload := TokenPayload{UserID: user.ID}</pre>
+<div class="line-number">58</div><div class="covered-count covered">1x</div><pre class="line covered">    token, err := CreateAccessToken(DefaultExpiredTime, payload, s.Config.JWTSecret)</pre>
+<div class="line-number">59</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">60</div><div class="covered-count uncovered"></div><pre class="line uncovered">        return s.handleError(c, dto.InternalErrorResponse)</pre>
+<div class="line-number">61</div><div class="covered-count uncovered"></div><pre class="line uncovered">    }</pre>
+<div class="line-number">62</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">63</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewLoginUserResponse(user, token)</pre>
+<div class="line-number">64</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">65</div><div class="covered-count"></div><pre class="line">}</pre>
+<div class="line-number">66</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">67</div><div class="covered-count covered">1x</div><pre class="line covered">func (s *Server) UpdateProfile(c echo.Context) error {</pre>
+<div class="line-number">68</div><div class="covered-count covered">1x</div><pre class="line covered">    userID, ok := c.Get(UserIDKey).(string)</pre>
+<div class="line-number">69</div><div class="covered-count covered">1x</div><pre class="line covered">    if !ok {</pre>
+<div class="line-number">70</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.UnauthorizedResponse)</pre>
+<div class="line-number">71</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">72</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">73</div><div class="covered-count covered">1x</div><pre class="line covered">    var req dto.UpdateProfileRequest</pre>
+<div class="line-number">74</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Bind(&amp;req); err != nil {</pre>
+<div class="line-number">75</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">76</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">77</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">78</div><div class="covered-count covered">1x</div><pre class="line covered">    if err := c.Validate(&amp;req); err != nil {</pre>
+<div class="line-number">79</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.BadRequestResponse)</pre>
+<div class="line-number">80</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">81</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">82</div><div class="covered-count covered">1x</div><pre class="line covered">    updatedProfile, err := s.UserService.UpdateProfile(c.Request().Context(), userID, &amp;user.UpdateProfileRequest{</pre>
+<div class="line-number">83</div><div class="covered-count covered">1x</div><pre class="line covered">        Username:    req.Username,</pre>
+<div class="line-number">84</div><div class="covered-count covered">1x</div><pre class="line covered">        DisplayName: req.DisplayName,</pre>
+<div class="line-number">85</div><div class="covered-count covered">1x</div><pre class="line covered">        AvatarURL:   req.AvatarURL,</pre>
+<div class="line-number">86</div><div class="covered-count covered">1x</div><pre class="line covered">        PhoneNumber: req.PhoneNumber,</pre>
+<div class="line-number">87</div><div class="covered-count covered">1x</div><pre class="line covered">        NationalID:  req.NationalID,</pre>
+<div class="line-number">88</div><div class="covered-count covered">1x</div><pre class="line covered">        BirthYear:   req.BirthYear,</pre>
+<div class="line-number">89</div><div class="covered-count covered">1x</div><pre class="line covered">        Gender:      req.Gender,</pre>
+<div class="line-number">90</div><div class="covered-count covered">1x</div><pre class="line covered">        Team:        req.Team,</pre>
+<div class="line-number">91</div><div class="covered-count covered">1x</div><pre class="line covered">    })</pre>
+<div class="line-number">92</div><div class="covered-count covered">1x</div><pre class="line covered">    if err != nil {</pre>
+<div class="line-number">93</div><div class="covered-count covered">1x</div><pre class="line covered">        return s.handleError(c, dto.InternalErrorResponse)</pre>
+<div class="line-number">94</div><div class="covered-count covered">1x</div><pre class="line covered">    }</pre>
+<div class="line-number">95</div><div class="covered-count"></div><pre class="line"></pre>
+<div class="line-number">96</div><div class="covered-count covered">1x</div><pre class="line covered">    resp := dto.NewUpdateProfileResponse(updatedProfile)</pre>
+<div class="line-number">97</div><div class="covered-count covered">1x</div><pre class="line covered">    return s.handleSuccess(c, resp)</pre>
+<div class="line-number">98</div><div class="covered-count"></div><pre class="line">}</pre>
+
+			</div>
+			
+		</div>
+		
+	</body>
+	<script>
+	const initialID = 'bd24451a-49f0-5861-b33e-97bdcb92a53b';
+
+	window.renderView = () => {
+		for (const view of document.getElementsByClassName('view')) {
+			view.style.display = 'none';
+		};
+		const id = window.location.hash ? window.location.hash.substring(1) : initialID;
+		const target = document.getElementById(id) || document.getElementById(initialID);
+		target.style.display = 'block';
+	};
+	window.addEventListener('hashchange', () => {
+		window.renderView();
+	});
+	window.renderView();
+	</script>
+</html>
