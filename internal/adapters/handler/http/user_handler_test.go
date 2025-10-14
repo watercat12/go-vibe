@@ -151,6 +151,9 @@ func TestServer_CreateUser(t *testing.T) {
 			dataActualJson, _ := json.Marshal(actualResponse.Data)
 			var dataActual dto.CreateUserResponse
 			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedData dto.CreateUserResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedData)
 
 			assert.Equal(t, dto.Response{
 				Status:  tt.expectedResponse.Status,
@@ -160,7 +163,7 @@ func TestServer_CreateUser(t *testing.T) {
 				Message: actualResponse.Message,
 			})
 			if strings.Contains(tt.name, "success") {
-				assert.Equal(t,dataActual,dto.CreateUserResponse{})
+				assert.Equal(t, expectedData, dataActual)
 			}
 		})
 	}
@@ -302,6 +305,9 @@ func TestServer_LoginUser(t *testing.T) {
 			dataActualJson, _ := json.Marshal(actualResponse.Data)
 			var dataActual dto.LoginUserResponse
 			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedData dto.LoginUserResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedData)
 
 			assert.Equal(t, dto.Response{
 				Status:  tt.expectedResponse.Status,
@@ -311,7 +317,7 @@ func TestServer_LoginUser(t *testing.T) {
 				Message: actualResponse.Message,
 			})
 			if strings.Contains(tt.name, "success") {
-				assert.NotEmpty(t,dataActual.Token)
+				assert.NotEmpty(t, dataActual.Token)
 			}
 		})
 	}
@@ -494,6 +500,9 @@ func TestServer_UpdateProfile(t *testing.T) {
 			dataActualJson, _ := json.Marshal(actualResponse.Data)
 			var dataActual dto.UpdateProfileResponse
 			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedData dto.UpdateProfileResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedData)
 
 			assert.Equal(t, dto.Response{
 				Status:  tt.expectedResponse.Status,
@@ -504,10 +513,10 @@ func TestServer_UpdateProfile(t *testing.T) {
 			})
 			if strings.Contains(tt.name, "success") {
 				assert.NotNil(t, dataActual.Profile)
-				assert.Equal(t, "profile-123", dataActual.Profile.ID)
-				assert.Equal(t, "user-123", dataActual.Profile.UserID)
-				assert.Equal(t, "Updated User", dataActual.Profile.DisplayName)
-				assert.Equal(t, "Back End", dataActual.Profile.Team)
+				assert.Equal(t, expectedData.Profile.ID, dataActual.Profile.ID)
+				assert.Equal(t, expectedData.Profile.UserID, dataActual.Profile.UserID)
+				assert.Equal(t, expectedData.Profile.DisplayName, dataActual.Profile.DisplayName)
+				assert.Equal(t, expectedData.Profile.Team, dataActual.Profile.Team)
 			}
 		})
 	}

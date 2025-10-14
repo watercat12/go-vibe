@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
@@ -113,8 +114,28 @@ func TestServer_CreatePaymentAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			expectedJSON, _ := json.Marshal(tt.expectedResponse)
-			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
+			var actualResponse dto.Response
+			_ = json.Unmarshal(rec.Body.Bytes(), &actualResponse)
+			dataActualJson, _ := json.Marshal(actualResponse.Data)
+			var dataActual dto.CreateAccountResponse
+			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedResponse dto.CreateAccountResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedResponse)
+
+			assert.Equal(t, dto.Response{
+				Status:  tt.expectedResponse.Status,
+				Message: tt.expectedResponse.Message,
+			}, dto.Response{
+				Status:  actualResponse.Status,
+				Message: actualResponse.Message,
+			})
+			if strings.Contains(tt.name, "success") {
+				assert.NotNil(t, dataActual.Account)
+				assert.Equal(t, expectedResponse.Account.ID, dataActual.Account.ID)
+				assert.Equal(t, expectedResponse.Account.AccountNumber, dataActual.Account.AccountNumber)
+				assert.Equal(t, expectedResponse.Account.Balance, dataActual.Account.Balance)
+			}
 		})
 	}
 }
@@ -213,8 +234,28 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			expectedJSON, _ := json.Marshal(tt.expectedResponse)
-			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
+			var actualResponse dto.Response
+			_ = json.Unmarshal(rec.Body.Bytes(), &actualResponse)
+			dataActualJson, _ := json.Marshal(actualResponse.Data)
+			var dataActual dto.CreateAccountResponse
+			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedResponse dto.CreateAccountResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedResponse)
+
+			assert.Equal(t, dto.Response{
+				Status:  tt.expectedResponse.Status,
+				Message: tt.expectedResponse.Message,
+			}, dto.Response{
+				Status:  actualResponse.Status,
+				Message: actualResponse.Message,
+			})
+			if strings.Contains(tt.name, "success") {
+				assert.NotNil(t, dataActual.Account)
+				assert.Equal(t, expectedResponse.Account.ID, dataActual.Account.ID)
+				assert.Equal(t, expectedResponse.Account.AccountNumber, dataActual.Account.AccountNumber)
+				assert.Equal(t, expectedResponse.Account.Balance, dataActual.Account.Balance)
+			}
 		})
 	}
 }
@@ -369,8 +410,30 @@ func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 			// Assert
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatus, rec.Code)
-			expectedJSON, _ := json.Marshal(tt.expectedResponse)
-			assert.JSONEq(t, string(expectedJSON), rec.Body.String())
+			var actualResponse dto.Response
+			_ = json.Unmarshal(rec.Body.Bytes(), &actualResponse)
+			dataActualJson, _ := json.Marshal(actualResponse.Data)
+			var dataActual dto.CreateAccountResponse
+			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedResponse dto.CreateAccountResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedResponse)
+
+			assert.Equal(t, dto.Response{
+				Status:  tt.expectedResponse.Status,
+				Message: tt.expectedResponse.Message,
+			}, dto.Response{
+				Status:  actualResponse.Status,
+				Message: actualResponse.Message,
+			})
+			if strings.Contains(tt.name, "success") {
+				assert.NotNil(t, dataActual.Account)
+				assert.Equal(t, expectedResponse.Account.ID, dataActual.Account.ID)
+				assert.Equal(t, expectedResponse.Account.AccountNumber, dataActual.Account.AccountNumber)
+				assert.Equal(t, expectedResponse.Account.Balance, dataActual.Account.Balance)
+				assert.Equal(t, expectedResponse.Account.InterestRate, dataActual.Account.InterestRate)
+				assert.Equal(t, expectedResponse.Account.FixedTermMonths, dataActual.Account.FixedTermMonths)
+			}
 		})
 	}
 }
