@@ -27,11 +27,7 @@ func CreateAccessToken(ttl time.Duration, payload TokenPayload, secretJWTKey str
 
 	tokenString, err := token.SignedString([]byte(secretJWTKey))
 
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
+	return tokenString, err
 }
 
 func ValidateToken(token string, secretJWTKey string) (jwt.MapClaims, error) {
