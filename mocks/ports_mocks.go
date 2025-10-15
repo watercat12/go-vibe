@@ -175,6 +175,74 @@ func (_c *MockAccountRepository_Create_Call) RunAndReturn(run func(ctx context.C
 	return _c
 }
 
+// GetAccountsByUserID provides a mock function for the type MockAccountRepository
+func (_mock *MockAccountRepository) GetAccountsByUserID(ctx context.Context, userID string) ([]*account.Account, error) {
+	ret := _mock.Called(ctx, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAccountsByUserID")
+	}
+
+	var r0 []*account.Account
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) ([]*account.Account, error)); ok {
+		return returnFunc(ctx, userID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) []*account.Account); ok {
+		r0 = returnFunc(ctx, userID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*account.Account)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockAccountRepository_GetAccountsByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAccountsByUserID'
+type MockAccountRepository_GetAccountsByUserID_Call struct {
+	*mock.Call
+}
+
+// GetAccountsByUserID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - userID string
+func (_e *MockAccountRepository_Expecter) GetAccountsByUserID(ctx interface{}, userID interface{}) *MockAccountRepository_GetAccountsByUserID_Call {
+	return &MockAccountRepository_GetAccountsByUserID_Call{Call: _e.mock.On("GetAccountsByUserID", ctx, userID)}
+}
+
+func (_c *MockAccountRepository_GetAccountsByUserID_Call) Run(run func(ctx context.Context, userID string)) *MockAccountRepository_GetAccountsByUserID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockAccountRepository_GetAccountsByUserID_Call) Return(accounts []*account.Account, err error) *MockAccountRepository_GetAccountsByUserID_Call {
+	_c.Call.Return(accounts, err)
+	return _c
+}
+
+func (_c *MockAccountRepository_GetAccountsByUserID_Call) RunAndReturn(run func(ctx context.Context, userID string) ([]*account.Account, error)) *MockAccountRepository_GetAccountsByUserID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetByID provides a mock function for the type MockAccountRepository
 func (_mock *MockAccountRepository) GetByID(ctx context.Context, id string) (*account.Account, error) {
 	ret := _mock.Called(ctx, id)
@@ -243,74 +311,6 @@ func (_c *MockAccountRepository_GetByID_Call) RunAndReturn(run func(ctx context.
 	return _c
 }
 
-// GetByUserID provides a mock function for the type MockAccountRepository
-func (_mock *MockAccountRepository) GetByUserID(ctx context.Context, userID string) (*account.Account, error) {
-	ret := _mock.Called(ctx, userID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetByUserID")
-	}
-
-	var r0 *account.Account
-	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*account.Account, error)); ok {
-		return returnFunc(ctx, userID)
-	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *account.Account); ok {
-		r0 = returnFunc(ctx, userID)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*account.Account)
-		}
-	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, userID)
-	} else {
-		r1 = ret.Error(1)
-	}
-	return r0, r1
-}
-
-// MockAccountRepository_GetByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetByUserID'
-type MockAccountRepository_GetByUserID_Call struct {
-	*mock.Call
-}
-
-// GetByUserID is a helper method to define mock.On call
-//   - ctx context.Context
-//   - userID string
-func (_e *MockAccountRepository_Expecter) GetByUserID(ctx interface{}, userID interface{}) *MockAccountRepository_GetByUserID_Call {
-	return &MockAccountRepository_GetByUserID_Call{Call: _e.mock.On("GetByUserID", ctx, userID)}
-}
-
-func (_c *MockAccountRepository_GetByUserID_Call) Run(run func(ctx context.Context, userID string)) *MockAccountRepository_GetByUserID_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
-		if args[0] != nil {
-			arg0 = args[0].(context.Context)
-		}
-		var arg1 string
-		if args[1] != nil {
-			arg1 = args[1].(string)
-		}
-		run(
-			arg0,
-			arg1,
-		)
-	})
-	return _c
-}
-
-func (_c *MockAccountRepository_GetByUserID_Call) Return(account1 *account.Account, err error) *MockAccountRepository_GetByUserID_Call {
-	_c.Call.Return(account1, err)
-	return _c
-}
-
-func (_c *MockAccountRepository_GetByUserID_Call) RunAndReturn(run func(ctx context.Context, userID string) (*account.Account, error)) *MockAccountRepository_GetByUserID_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // GetFlexibleSavingsAccounts provides a mock function for the type MockAccountRepository
 func (_mock *MockAccountRepository) GetFlexibleSavingsAccounts(ctx context.Context) ([]*account.Account, error) {
 	ret := _mock.Called(ctx)
@@ -369,6 +369,74 @@ func (_c *MockAccountRepository_GetFlexibleSavingsAccounts_Call) Return(accounts
 }
 
 func (_c *MockAccountRepository_GetFlexibleSavingsAccounts_Call) RunAndReturn(run func(ctx context.Context) ([]*account.Account, error)) *MockAccountRepository_GetFlexibleSavingsAccounts_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetPaymentAccount provides a mock function for the type MockAccountRepository
+func (_mock *MockAccountRepository) GetPaymentAccount(ctx context.Context, userID string) (*account.Account, error) {
+	ret := _mock.Called(ctx, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetPaymentAccount")
+	}
+
+	var r0 *account.Account
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*account.Account, error)); ok {
+		return returnFunc(ctx, userID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *account.Account); ok {
+		r0 = returnFunc(ctx, userID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*account.Account)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockAccountRepository_GetPaymentAccount_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetPaymentAccount'
+type MockAccountRepository_GetPaymentAccount_Call struct {
+	*mock.Call
+}
+
+// GetPaymentAccount is a helper method to define mock.On call
+//   - ctx context.Context
+//   - userID string
+func (_e *MockAccountRepository_Expecter) GetPaymentAccount(ctx interface{}, userID interface{}) *MockAccountRepository_GetPaymentAccount_Call {
+	return &MockAccountRepository_GetPaymentAccount_Call{Call: _e.mock.On("GetPaymentAccount", ctx, userID)}
+}
+
+func (_c *MockAccountRepository_GetPaymentAccount_Call) Run(run func(ctx context.Context, userID string)) *MockAccountRepository_GetPaymentAccount_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockAccountRepository_GetPaymentAccount_Call) Return(account1 *account.Account, err error) *MockAccountRepository_GetPaymentAccount_Call {
+	_c.Call.Return(account1, err)
+	return _c
+}
+
+func (_c *MockAccountRepository_GetPaymentAccount_Call) RunAndReturn(run func(ctx context.Context, userID string) (*account.Account, error)) *MockAccountRepository_GetPaymentAccount_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -720,6 +788,74 @@ func (_c *MockAccountService_CreatePaymentAccount_Call) Return(account1 *account
 }
 
 func (_c *MockAccountService_CreatePaymentAccount_Call) RunAndReturn(run func(ctx context.Context, userID string) (*account.Account, error)) *MockAccountService_CreatePaymentAccount_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetAccountsByUserID provides a mock function for the type MockAccountService
+func (_mock *MockAccountService) GetAccountsByUserID(ctx context.Context, userID string) ([]*account.Account, error) {
+	ret := _mock.Called(ctx, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAccountsByUserID")
+	}
+
+	var r0 []*account.Account
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) ([]*account.Account, error)); ok {
+		return returnFunc(ctx, userID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) []*account.Account); ok {
+		r0 = returnFunc(ctx, userID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*account.Account)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockAccountService_GetAccountsByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAccountsByUserID'
+type MockAccountService_GetAccountsByUserID_Call struct {
+	*mock.Call
+}
+
+// GetAccountsByUserID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - userID string
+func (_e *MockAccountService_Expecter) GetAccountsByUserID(ctx interface{}, userID interface{}) *MockAccountService_GetAccountsByUserID_Call {
+	return &MockAccountService_GetAccountsByUserID_Call{Call: _e.mock.On("GetAccountsByUserID", ctx, userID)}
+}
+
+func (_c *MockAccountService_GetAccountsByUserID_Call) Run(run func(ctx context.Context, userID string)) *MockAccountService_GetAccountsByUserID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockAccountService_GetAccountsByUserID_Call) Return(accounts []*account.Account, err error) *MockAccountService_GetAccountsByUserID_Call {
+	_c.Call.Return(accounts, err)
+	return _c
+}
+
+func (_c *MockAccountService_GetAccountsByUserID_Call) RunAndReturn(run func(ctx context.Context, userID string) ([]*account.Account, error)) *MockAccountService_GetAccountsByUserID_Call {
 	_c.Call.Return(run)
 	return _c
 }

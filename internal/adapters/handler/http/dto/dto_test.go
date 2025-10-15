@@ -282,3 +282,51 @@ func TestNewCreateAccountResponse(t *testing.T) {
 	assert.Equal(t, acc.InterestRate, resp.Account.InterestRate)
 	assert.Equal(t, acc.FixedTermMonths, resp.Account.FixedTermMonths)
 }
+
+func TestNewListAccountsResponse(t *testing.T) {
+	interestRate1 := 1.8
+	fixedTermMonths1 := 3
+	interestRate2 := 2.5
+	fixedTermMonths2 := 6
+	accounts := []*account.Account{
+		{
+			ID:              "acc-123",
+			UserID:          "user-123",
+			AccountType:     account.PaymentAccountType,
+			AccountNumber:   "PAY123456789",
+			AccountName:     "Payment Account",
+			Balance:         100.0,
+			InterestRate:    &interestRate1,
+			FixedTermMonths: &fixedTermMonths1,
+		},
+		{
+			ID:              "acc-456",
+			UserID:          "user-123",
+			AccountType:     account.FlexibleSavingsAccountType,
+			AccountNumber:   "SAV987654321",
+			AccountName:     "Savings Account",
+			Balance:         500.0,
+			InterestRate:    &interestRate2,
+			FixedTermMonths: &fixedTermMonths2,
+		},
+	}
+
+	resp := NewListAccountsResponse(accounts)
+
+	assert.NotNil(t, resp)
+	assert.Len(t, resp.Accounts, 2)
+	assert.Equal(t, accounts[0].ID, resp.Accounts[0].ID)
+	assert.Equal(t, accounts[0].AccountNumber, resp.Accounts[0].AccountNumber)
+	assert.Equal(t, accounts[0].AccountType, resp.Accounts[0].AccountType)
+	assert.Equal(t, accounts[0].AccountName, resp.Accounts[0].AccountName)
+	assert.Equal(t, accounts[0].Balance, resp.Accounts[0].Balance)
+	assert.Equal(t, accounts[0].InterestRate, resp.Accounts[0].InterestRate)
+	assert.Equal(t, accounts[0].FixedTermMonths, resp.Accounts[0].FixedTermMonths)
+	assert.Equal(t, accounts[1].ID, resp.Accounts[1].ID)
+	assert.Equal(t, accounts[1].AccountNumber, resp.Accounts[1].AccountNumber)
+	assert.Equal(t, accounts[1].AccountType, resp.Accounts[1].AccountType)
+	assert.Equal(t, accounts[1].AccountName, resp.Accounts[1].AccountName)
+	assert.Equal(t, accounts[1].Balance, resp.Accounts[1].Balance)
+	assert.Equal(t, accounts[1].InterestRate, resp.Accounts[1].InterestRate)
+	assert.Equal(t, accounts[1].FixedTermMonths, resp.Accounts[1].FixedTermMonths)
+}

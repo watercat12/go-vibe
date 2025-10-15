@@ -46,7 +46,7 @@ func TestAccountService_CreatePaymentAccount(t *testing.T) {
 
 				// Mock no existing payment account
 				accountRepo.EXPECT().
-					GetByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+					GetPaymentAccount(mock.Anything, mock.MatchedBy(func(userID string) bool {
 						return userID == "user-123"
 					})).
 					Return(nil, errors.New("not found")).
@@ -135,7 +135,7 @@ func TestAccountService_CreatePaymentAccount(t *testing.T) {
 
 				// Mock existing payment account
 				accountRepo.EXPECT().
-					GetByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+					GetPaymentAccount(mock.Anything, mock.MatchedBy(func(userID string) bool {
 						return userID == "user-123"
 					})).
 					Return(&account.Account{
@@ -169,7 +169,7 @@ func TestAccountService_CreatePaymentAccount(t *testing.T) {
 
 				// Mock no existing payment account
 				accountRepo.EXPECT().
-					GetByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+					GetPaymentAccount(mock.Anything, mock.MatchedBy(func(userID string) bool {
 						return userID == "user-123"
 					})).
 					Return(nil, errors.New("not found")).
@@ -867,6 +867,118 @@ func TestAccountService_CalculateDailyInterest(t *testing.T) {
 				assert.Equal(t, tt.expectedError.Error(), err.Error())
 			} else {
 				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestAccountService_GetAccountsByUserID(t *testing.T) {
+	tests := []struct {
+		name           string
+		userID         string
+		mockSetup      func(*mocks.MockAccountRepository, *mocks.MockUserRepository)
+		expectedResult []*account.Account
+		expectedError  error
+	}{
+		{
+			name:   "success - get accounts by user ID",
+			userID: "user-123",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, userRepo *mocks.MockUserRepository) {
+				// Mock user exists
+				userRepo.EXPECT().
+					GetByID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(&user.User{ID: "user-123"}, nil).
+					Once()
+
+				// Mock get accounts
+				accounts := []*account.Account{
+					{ID: "acc-1", UserID: "user-123", AccountType: account.PaymentAccountType},
+					{ID: "acc-2", UserID: "user-123", AccountType: account.FlexibleSavingsAccountType},
+				}
+				accountRepo.EXPECT().
+					GetAccountsByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(accounts, nil).
+					Once()
+			},
+			expectedResult: []*account.Account{
+				{ID: "acc-1", UserID: "user-123", AccountType: account.PaymentAccountType},
+				{ID: "acc-2", UserID: "user-123", AccountType: account.FlexibleSavingsAccountType},
+			},
+			expectedError: nil,
+		},
+		{
+			name:   "error - user not found",
+			userID: "user-123",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, userRepo *mocks.MockUserRepository) {
+				// Mock user not found
+				userRepo.EXPECT().
+					GetByID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(nil, errors.New("user not found")).
+					Once()
+			},
+			expectedResult: nil,
+			expectedError:  errors.New("user not found"),
+		},
+		{
+			name:   "error - get accounts fails",
+			userID: "user-123",
+			mockSetup: func(accountRepo *mocks.MockAccountRepository, userRepo *mocks.MockUserRepository) {
+				// Mock user exists
+				userRepo.EXPECT().
+					GetByID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(&user.User{ID: "user-123"}, nil).
+					Once()
+
+				// Mock get accounts fails
+				accountRepo.EXPECT().
+					GetAccountsByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(nil, errors.New("get accounts failed")).
+					Once()
+			},
+			expectedResult: nil,
+			expectedError:  errors.New("get accounts failed"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create mocks
+			accountRepo := mocks.NewMockAccountRepository(t)
+			userRepo := mocks.NewMockUserRepository(t)
+
+			// Setup mocks
+			tt.mockSetup(accountRepo, userRepo)
+
+			// Create service
+			service := NewAccountService(accountRepo, userRepo, nil, nil, nil)
+
+			// Execute
+			result, err := service.GetAccountsByUserID(context.Background(), tt.userID)
+
+			// Assert
+			if tt.expectedError != nil {
+				assert.Error(t, err)
+				assert.Equal(t, tt.expectedError.Error(), err.Error())
+				assert.Nil(t, result)
+			} else {
+				assert.NoError(t, err)
+				assert.NotNil(t, result)
+				assert.Len(t, result, len(tt.expectedResult))
+				for i, acc := range result {
+					assert.Equal(t, tt.expectedResult[i].ID, acc.ID)
+					assert.Equal(t, tt.expectedResult[i].UserID, acc.UserID)
+					assert.Equal(t, tt.expectedResult[i].AccountType, acc.AccountType)
+				}
 			}
 		})
 	}

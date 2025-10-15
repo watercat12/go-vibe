@@ -33,7 +33,7 @@ func (s *accountService) CreatePaymentAccount(ctx context.Context, userID string
 		return nil, err
 	}
 
-	_, err = s.repo.GetByUserID(ctx, userID)
+	_, err = s.repo.GetPaymentAccount(ctx, userID)
 	if err == nil {
 		return nil, ErrLimitPaymentAccount
 	}
@@ -130,4 +130,13 @@ func (s *accountService) CreateFixedSavingsAccount(ctx context.Context, userID s
 	acc := account.NewFixedSavingsAccount(userID, termMonths, interestRate)
 
 	return s.repo.Create(ctx, acc)
+}
+
+func (s *accountService) GetAccountsByUserID(ctx context.Context, userID string) ([]*account.Account, error) {
+	_, err := s.userRepo.GetByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.repo.GetAccountsByUserID(ctx, userID)
 }

@@ -4,6 +4,7 @@ import (
 	"e-wallet/internal/adapters/handler/http/dto"
 
 	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 )
 
 func (s *Server) CreatePaymentAccount(c echo.Context) error {
@@ -14,6 +15,7 @@ func (s *Server) CreatePaymentAccount(c echo.Context) error {
 
 	createdAccount, err := s.AccountService.CreatePaymentAccount(c.Request().Context(), userID)
 	if err != nil {
+		logrus.Error(err)
 		return s.handleError(c, dto.BadRequestResponse)
 	}
 
@@ -33,6 +35,21 @@ func (s *Server) CreateFlexibleSavingsAccount(c echo.Context) error {
 	}
 
 	resp := dto.NewCreateAccountResponse(createdAccount)
+	return s.handleSuccess(c, resp)
+}
+
+func (s *Server) GetAccounts(c echo.Context) error {
+	userID, ok := c.Get(UserIDKey).(string)
+	if !ok {
+		return s.handleError(c, dto.UnauthorizedResponse)
+	}
+
+	accounts, err := s.AccountService.GetAccountsByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return s.handleError(c, dto.BadRequestResponse)
+	}
+
+	resp := dto.NewListAccountsResponse(accounts)
 	return s.handleSuccess(c, resp)
 }
 

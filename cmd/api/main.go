@@ -17,6 +17,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	applog, err := logger.NewAppLogger()
 	if err != nil {
 		log.Fatalf("cannot load config: %v\n", err)

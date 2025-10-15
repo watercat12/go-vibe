@@ -156,7 +156,22 @@ func TestAccountRepository_Create_DBError(t *testing.T) {
 	assert.Nil(t, result)
 }
 
-func TestAccountRepository_GetByUserID(t *testing.T) {
+func TestAccountRepository_GetPaymentAccount_DBError(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewAccountRepository(db)
+
+	// Close the database connection to simulate DB error
+	sqlDB, _ := db.DB()
+	sqlDB.Close()
+
+	result, err := repo.GetPaymentAccount(context.Background(), pkg.NewUUIDV7())
+
+	assert.Error(t, err)
+	assert.Nil(t, result)
+	assert.NotEqual(t, ErrAccountNotFound, err)
+}
+
+func TestAccountRepository_GetPaymentAccount(t *testing.T) {
 	db := setupTestDB(t)
 	userRepo := NewUserRepository(db)
 	repo := NewAccountRepository(db)
@@ -171,7 +186,7 @@ func TestAccountRepository_GetByUserID(t *testing.T) {
 	_, err := userRepo.Create(context.Background(), user)
 	require.NoError(t, err)
 
-	testAccount := &account.Account{
+	paymentAccount := &account.Account{
 		ID:            pkg.NewUUIDV7(),
 		UserID:        user.ID,
 		AccountType:   account.PaymentAccountType,
@@ -179,7 +194,7 @@ func TestAccountRepository_GetByUserID(t *testing.T) {
 		AccountName:   "Payment Account",
 		Balance:       1000.0,
 	}
-	_, err = repo.Create(context.Background(), testAccount)
+	_, err = repo.Create(context.Background(), paymentAccount)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -189,12 +204,12 @@ func TestAccountRepository_GetByUserID(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name:        "success - get existing account",
-			userID:      testAccount.UserID,
+			name:        "success - get existing payment account",
+			userID:      user.ID,
 			expectError: false,
 		},
 		{
-			name:        "error - account not found",
+			name:        "error - payment account not found",
 			userID:      pkg.NewUUIDV7(),
 			expectError: true,
 			expectedErr: ErrAccountNotFound,
@@ -203,7 +218,7 @@ func TestAccountRepository_GetByUserID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := repo.GetByUserID(context.Background(), tt.userID)
+			result, err := repo.GetPaymentAccount(context.Background(), tt.userID)
 
 			if tt.expectError {
 				assert.Error(t, err)
@@ -214,30 +229,15 @@ func TestAccountRepository_GetByUserID(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, result)
-				assert.Equal(t, testAccount.ID, result.ID)
-				assert.Equal(t, testAccount.UserID, result.UserID)
-				assert.Equal(t, testAccount.AccountType, result.AccountType)
-				assert.Equal(t, testAccount.AccountNumber, result.AccountNumber)
-				assert.Equal(t, testAccount.AccountName, result.AccountName)
-				assert.Equal(t, testAccount.Balance, result.Balance)
+				assert.Equal(t, paymentAccount.ID, result.ID)
+				assert.Equal(t, paymentAccount.UserID, result.UserID)
+				assert.Equal(t, paymentAccount.AccountType, result.AccountType)
+				assert.Equal(t, paymentAccount.AccountNumber, result.AccountNumber)
+				assert.Equal(t, paymentAccount.AccountName, result.AccountName)
+				assert.Equal(t, paymentAccount.Balance, result.Balance)
 			}
 		})
 	}
-}
-
-func TestAccountRepository_GetByUserID_DBError(t *testing.T) {
-	db := setupTestDB(t)
-	repo := NewAccountRepository(db)
-
-	// Close the database connection to simulate DB error
-	sqlDB, _ := db.DB()
-	sqlDB.Close()
-
-	result, err := repo.GetByUserID(context.Background(), pkg.NewUUIDV7())
-
-	assert.Error(t, err)
-	assert.Nil(t, result)
-	assert.NotEqual(t, ErrAccountNotFound, err)
 }
 
 func TestAccountRepository_GetByID(t *testing.T) {
@@ -512,4 +512,104 @@ func TestAccountRepository_UpdateBalance_DBError(t *testing.T) {
 	err := repo.UpdateBalance(context.Background(), pkg.NewUUIDV7(), 1000.0)
 
 	assert.Error(t, err)
+}
+
+func TestAccountRepository_GetAccountsByUserID(t *testing.T) {
+	db := setupTestDB(t)
+	userRepo := NewUserRepository(db)
+	repo := NewAccountRepository(db)
+
+	// Setup test data
+	user := &user.User{
+		ID:           pkg.NewUUIDV7(),
+		Username:     "testuser",
+		Email:        "test@example.com",
+		PasswordHash: "hashedpassword",
+	}
+	_, err := userRepo.Create(context.Background(), user)
+	require.NoError(t, err)
+
+	// Create multiple accounts for the user
+	accounts := []*account.Account{
+		{
+			ID:            pkg.NewUUIDV7(),
+			UserID:        user.ID,
+			AccountType:   account.PaymentAccountType,
+			AccountNumber: "PAY123456789",
+			AccountName:   "Payment Account",
+			Balance:       1000.0,
+		},
+		{
+			ID:            pkg.NewUUIDV7(),
+			UserID:        user.ID,
+			AccountType:   account.FlexibleSavingsAccountType,
+			AccountNumber: "SAV123456789",
+			AccountName:   "Flexible Savings",
+			Balance:       5000.0,
+		},
+	}
+
+	for _, acc := range accounts {
+		_, err := repo.Create(context.Background(), acc)
+		require.NoError(t, err)
+	}
+
+	tests := []struct {
+		name        string
+		userID      string
+		expectError bool
+		expectedLen int
+	}{
+		{
+			name:        "success - get multiple accounts for user",
+			userID:      user.ID,
+			expectError: false,
+			expectedLen: 2,
+		},
+		{
+			name:        "success - get empty accounts for non-existing user",
+			userID:      pkg.NewUUIDV7(),
+			expectError: false,
+			expectedLen: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := repo.GetAccountsByUserID(context.Background(), tt.userID)
+
+			if tt.expectError {
+				assert.Error(t, err)
+				assert.Nil(t, result)
+			} else {
+				assert.NoError(t, err)
+				assert.Len(t, result, tt.expectedLen)
+				if tt.expectedLen > 0 {
+					// Verify the accounts are returned correctly
+					for i, acc := range result {
+						assert.Equal(t, accounts[i].ID, acc.ID)
+						assert.Equal(t, accounts[i].UserID, acc.UserID)
+						assert.Equal(t, accounts[i].AccountType, acc.AccountType)
+						assert.Equal(t, accounts[i].AccountNumber, acc.AccountNumber)
+						assert.Equal(t, accounts[i].AccountName, acc.AccountName)
+						assert.Equal(t, accounts[i].Balance, acc.Balance)
+					}
+				}
+			}
+		})
+	}
+}
+
+func TestAccountRepository_GetAccountsByUserID_DBError(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewAccountRepository(db)
+
+	// Close the database connection to simulate DB error
+	sqlDB, _ := db.DB()
+	sqlDB.Close()
+
+	result, err := repo.GetAccountsByUserID(context.Background(), pkg.NewUUIDV7())
+
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }

@@ -37,9 +37,13 @@ func (r *accountRepository) Create(ctx context.Context, account *account.Account
 	return schema.ToDomain(), nil
 }
 
-func (r *accountRepository) GetByUserID(ctx context.Context, userID string) (*account.Account, error) {
+func (r *accountRepository) GetPaymentAccount(ctx context.Context, userID string) (*account.Account, error) {
 	var schema Account
-	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("user_id = ?", userID).First(&schema).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).
+		Where("user_id = ?", userID).
+		Where("account_type = ?", account.PaymentAccountType).
+		First(&schema).
+		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrAccountNotFound
 		}
@@ -63,7 +67,12 @@ func (r *accountRepository) GetByID(ctx context.Context, id string) (*account.Ac
 
 func (r *accountRepository) CountSavingsAccounts(ctx context.Context, userID string) (int64, error) {
 	var count int64
-	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("user_id = ? AND account_type LIKE ?", userID, "savings_%").Count(&count).Error; err != nil {
+	if err := r.db.WithContext(ctx).
+		Table(AccountsTableName).
+		Where("user_id = ?", userID).
+		Where("account_type LIKE ?", "savings_%").
+		Count(&count).
+		Error; err != nil {
 		return 0, err
 	}
 	return count, nil
@@ -71,7 +80,23 @@ func (r *accountRepository) CountSavingsAccounts(ctx context.Context, userID str
 
 func (r *accountRepository) GetFlexibleSavingsAccounts(ctx context.Context) ([]*account.Account, error) {
 	var schemas []Account
-	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("account_type = ?", account.FlexibleSavingsAccountType).Find(&schemas).Error; err != nil {
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).
+		Where("account_type = ?", account.FlexibleSavingsAccountType).
+		Find(&schemas).
+		Error; err != nil {
+		return nil, err
+	}
+
+	accounts := make([]*account.Account, len(schemas))
+	for i, schema := range schemas {
+		accounts[i] = schema.ToDomain()
+	}
+	return accounts, nil
+}
+
+func (r *accountRepository) GetAccountsByUserID(ctx context.Context, userID string) ([]*account.Account, error) {
+	var schemas []Account
+	if err := r.db.WithContext(ctx).Table(AccountsTableName).Where("user_id = ?", userID).Find(&schemas).Error; err != nil {
 		return nil, err
 	}
 

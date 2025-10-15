@@ -260,6 +260,148 @@ func TestServer_CreateFlexibleSavingsAccount(t *testing.T) {
 	}
 }
 
+func TestServer_GetAccounts(t *testing.T) {
+	tests := []struct {
+		name             string
+		userID           string
+		mockSetup        func(*mocks.MockAccountService)
+		expectedStatus   int
+		expectedResponse dto.Response
+	}{
+		{
+			name:   "success - get accounts",
+			userID: "user-123",
+			mockSetup: func(accountSvc *mocks.MockAccountService) {
+				accountSvc.EXPECT().
+					GetAccountsByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return([]*account.Account{
+						{
+							ID:            "acc-123",
+							UserID:        "user-123",
+							AccountType:   account.PaymentAccountType,
+							AccountNumber: "PAY123456789",
+							Balance:       100.0,
+						},
+						{
+							ID:            "acc-456",
+							UserID:        "user-123",
+							AccountType:   account.FlexibleSavingsAccountType,
+							AccountNumber: "SAV123456789",
+							Balance:       500.0,
+						},
+					}, nil).
+					Once()
+			},
+			expectedStatus: http.StatusOK,
+			expectedResponse: dto.Response{
+				Status:  http.StatusOK,
+				Message: "OK",
+				Data: dto.ListAccountsResponse{
+					Accounts: []*dto.AccountResponse{
+						{
+							ID:            "acc-123",
+							AccountNumber: "PAY123456789",
+							AccountType:   account.PaymentAccountType,
+							Balance:       100.0,
+						},
+						{
+							ID:            "acc-456",
+							AccountNumber: "SAV123456789",
+							AccountType:   account.FlexibleSavingsAccountType,
+							Balance:       500.0,
+						},
+					},
+				},
+			},
+		},
+		{
+			name:   "error - unauthorized",
+			userID: "",
+			mockSetup: func(accountSvc *mocks.MockAccountService) {
+				// No mock setup needed
+			},
+			expectedStatus: http.StatusUnauthorized,
+			expectedResponse: dto.UnauthorizedResponse,
+		},
+		{
+			name:   "error - service fails",
+			userID: "user-123",
+			mockSetup: func(accountSvc *mocks.MockAccountService) {
+				accountSvc.EXPECT().
+					GetAccountsByUserID(mock.Anything, mock.MatchedBy(func(userID string) bool {
+						return userID == "user-123"
+					})).
+					Return(nil, errors.New("service error")).
+					Once()
+			},
+			expectedStatus: http.StatusBadRequest,
+			expectedResponse: dto.BadRequestResponse,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create mocks
+			accountSvc := mocks.NewMockAccountService(t)
+
+			// Setup mocks
+			tt.mockSetup(accountSvc)
+
+			// Create server
+			e := echo.New()
+			req := httptest.NewRequest(http.MethodGet, "/api/accounts", nil)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+
+			// Set user ID if provided
+			if tt.userID != "" {
+				c.Set(UserIDKey, tt.userID)
+			}
+
+			// Create server instance
+			s := &Server{
+				AccountService: accountSvc,
+				Logger:         logger.NOOPLogger,
+			}
+
+			// Execute
+			err := s.GetAccounts(c)
+
+			// Assert
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedStatus, rec.Code)
+			var actualResponse dto.Response
+			_ = json.Unmarshal(rec.Body.Bytes(), &actualResponse)
+			dataActualJson, _ := json.Marshal(actualResponse.Data)
+			var dataActual dto.ListAccountsResponse
+			_ = json.Unmarshal(dataActualJson, &dataActual)
+			expectedResponseJson, _ := json.Marshal(tt.expectedResponse.Data)
+			var expectedResponse dto.ListAccountsResponse
+			_ = json.Unmarshal(expectedResponseJson, &expectedResponse)
+
+			assert.Equal(t, dto.Response{
+				Status:  tt.expectedResponse.Status,
+				Message: tt.expectedResponse.Message,
+			}, dto.Response{
+				Status:  actualResponse.Status,
+				Message: actualResponse.Message,
+			})
+			if strings.Contains(tt.name, "success") {
+				assert.NotNil(t, dataActual.Accounts)
+				assert.Len(t, dataActual.Accounts, len(expectedResponse.Accounts))
+				for i, acc := range dataActual.Accounts {
+					assert.Equal(t, expectedResponse.Accounts[i].ID, acc.ID)
+					assert.Equal(t, expectedResponse.Accounts[i].AccountNumber, acc.AccountNumber)
+					assert.Equal(t, expectedResponse.Accounts[i].AccountType, acc.AccountType)
+					assert.Equal(t, expectedResponse.Accounts[i].Balance, acc.Balance)
+				}
+			}
+		})
+	}
+}
+
 func TestServer_CreateFixedSavingsAccount(t *testing.T) {
 	tests := []struct {
 		name             string
