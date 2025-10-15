@@ -3,6 +3,7 @@ package account
 import (
 	"errors"
 	"fmt"
+	"math"
 	"time"
 
 	"e-wallet/pkg"
@@ -57,7 +58,7 @@ func (a *Account) CalculateDailyInterest() float64 {
 	}
 
 	dailyRate := annualRate / 365
-	return a.Balance * dailyRate
+	return math.Round(a.Balance*dailyRate*1000) / 1000
 }
 
 func GenerateAccountNumber(accountType string) string {
