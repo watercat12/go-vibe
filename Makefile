@@ -11,7 +11,10 @@ local-db:
 db/migrate:
 	go run ./cmd/migrate
 
-TEST_PATH ?= ./internal/adapters/handler/...
+gen-mock:
+	mockery
+
+TEST_PATH ?= ./internal/...
 
 unit-test:
 	@mkdir -p coverage
