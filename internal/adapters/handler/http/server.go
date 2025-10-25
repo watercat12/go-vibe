@@ -21,8 +21,9 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// service layers
-	UserService    ports.UserService
-	AccountService ports.AccountService
+	UserService     ports.UserService
+	AccountService  ports.AccountService
+	BankLinkService ports.BankLinkService
 }
 
 type CustomValidator struct {
@@ -138,4 +139,6 @@ func (s *Server) RegisterRoute() {
 	apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)
 	apiGroup.POST("/accounts/savings/flexible", s.CreateFlexibleSavingsAccount)
 	apiGroup.GET("/accounts", s.GetAccounts)
+	// bank links
+	apiGroup.POST("/user/bank-accounts", s.LinkBankAccount)
 }

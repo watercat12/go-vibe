@@ -22,4 +22,7 @@ unit-test:
 	@cat coverage/coverage.txt.tmp | grep -v "mock_" > coverage/coverage.txt
 	@go tool cover -html=coverage/coverage.txt -o coverage/index-application.html
 split-reports:
-	./split-html.sh
+	bash ./split-html.sh
+
+get-package-change:
+	bash ./get-package-change-path.sh

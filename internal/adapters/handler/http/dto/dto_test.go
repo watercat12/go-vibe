@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"e-wallet/internal/domain/account"
+	"e-wallet/internal/domain/bank_link"
 	"e-wallet/internal/domain/user"
 )
 
@@ -329,4 +330,21 @@ func TestNewListAccountsResponse(t *testing.T) {
 	assert.Equal(t, accounts[1].Balance, resp.Accounts[1].Balance)
 	assert.Equal(t, accounts[1].InterestRate, resp.Accounts[1].InterestRate)
 	assert.Equal(t, accounts[1].FixedTermMonths, resp.Accounts[1].FixedTermMonths)
+}
+
+func TestNewLinkBankAccountResponse(t *testing.T) {
+	bankLink := &bank_link.BankLink{
+		ID:          "link-123",
+		UserID:      "user-123",
+		BankCode:    "BANK001",
+		AccountType: "SAVINGS",
+		Status:      "ACTIVE",
+	}
+
+	resp := NewLinkBankAccountResponse(bankLink)
+
+	assert.Equal(t, bankLink.ID, resp.ID)
+	assert.Equal(t, bankLink.BankCode, resp.BankCode)
+	assert.Equal(t, bankLink.AccountType, resp.AccountType)
+	assert.Equal(t, bankLink.Status, resp.Status)
 }
