@@ -20,11 +20,12 @@ func NewUserRepository(db *gorm.DB) ports.UserRepository {
 
 func (r *userRepository) Create(ctx context.Context, user *user.User) (*user.User, error) {
 	schema := &User{
-		ID:              user.ID,
-		Username:        user.Username,
-		Email:           user.Email,
-		PasswordHash:    user.PasswordHash,
-		IsEmailVerified: user.IsEmailVerified,
+		ID:                 user.ID,
+		Username:           user.Username,
+		Email:              user.Email,
+		PasswordHash:       user.PasswordHash,
+		IsEmailVerified:    user.IsEmailVerified,
+		IsProfileCompleted: user.IsProfileCompleted,
 	}
 
 	if err := r.db.WithContext(ctx).Table(UsersTableName).Create(schema).Error; err != nil {
@@ -56,4 +57,8 @@ func (r *userRepository) GetByID(ctx context.Context, id string) (*user.User, er
 	}
 
 	return schema.ToDomain(), nil
+}
+
+func (r *userRepository) UpdateProfileCompleted(ctx context.Context, id string, completed bool) error {
+	return r.db.WithContext(ctx).Table(UsersTableName).Where("id = ?", id).Update("is_profile_completed", completed).Error
 }

@@ -8,13 +8,14 @@ import (
 )
 
 type User struct {
-	ID               string
-	Username         string
-	Email            string
-	PasswordHash     string
-	IsEmailVerified  bool
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
+	ID                  string
+	Username            string
+	Email               string
+	PasswordHash        string
+	IsEmailVerified     bool
+	IsProfileCompleted  bool
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }
 
 type CreateUserRequest struct {
@@ -30,10 +31,11 @@ type LoginUserRequest struct {
 
 func NewUser(username, email, passwordHash string) *User {
 	return &User{
-		ID:           pkg.NewUUIDV7(),
-		Username:     username,
-		Email:        email,
-		PasswordHash: passwordHash,
+		ID:               pkg.NewUUIDV7(),
+		Username:         username,
+		Email:            email,
+		PasswordHash:     passwordHash,
+		IsProfileCompleted: false,
 	}
 }
 

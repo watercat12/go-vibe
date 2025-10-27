@@ -21,7 +21,8 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// service layers
-	UserService ports.UserService
+	UserService    ports.UserService
+	ProfileService ports.ProfileService
 }
 
 type CustomValidator struct {
@@ -125,4 +126,8 @@ func (s *Server) RegisterRoute() {
 	// auth
 	apiGroup.POST("/auth/register", s.CreateUser)
 	apiGroup.POST("/auth/login", s.LoginUser)
+
+	// users
+	apiGroup.PUT("/users/profile", s.UpdateProfile)
+	apiGroup.GET("/users/profile", s.GetProfile)
 }

@@ -26,7 +26,7 @@ func ValidatePassword(fl validator.FieldLevel) bool {
 
 func ValidateTeam(fl validator.FieldLevel) bool {
 	team := fl.Field().String()
-	validTeams := []string{"Front End", "Back End", "QA", "Admin", "Brse", "Design", "Others"}
+	validTeams := []string{"FRONT_END", "BACK_END", "QA", "ADMIN", "BRSE", "DESIGN", "OTHERS"}
 	for _, validTeam := range validTeams {
 		if team == validTeam {
 			return true
@@ -35,7 +35,14 @@ func ValidateTeam(fl validator.FieldLevel) bool {
 	return false
 }
 
+func ValidatePhone(fl validator.FieldLevel) bool {
+	phone := fl.Field().String()
+	phoneRegex := regexp.MustCompile(`^\+?[0-9]{10,15}$`)
+	return phoneRegex.MatchString(phone)
+}
+
 func RegisterCustomValidations(v *validator.Validate) {
 	v.RegisterValidation("password", ValidatePassword)
 	v.RegisterValidation("team", ValidateTeam)
+	v.RegisterValidation("phone", ValidatePhone)
 }

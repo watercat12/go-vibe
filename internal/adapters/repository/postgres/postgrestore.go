@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	// "gorm.io/gorm/logger"
 )
 
@@ -43,7 +44,7 @@ func NewConnection(opts Options) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(datasource), &gorm.Config{
 		TranslateError: true,
-		// Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		return nil, err
