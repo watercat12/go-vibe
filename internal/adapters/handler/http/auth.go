@@ -13,6 +13,8 @@ import (
 
 const (
 	UserClaimKey = "UserClaimKey"
+ 	UserIDKey = "UserID"
+
 )
 
 type Authentication struct {
@@ -75,6 +77,7 @@ func (a *Authentication) ValidateAccessToken(token string, c echo.Context) (bool
 	}
 
 	c.Set(UserClaimKey, payload)
+	c.Set(UserIDKey, payload.UserID)
 
 	return true, nil
 }
@@ -89,19 +92,4 @@ func ContainFirst(elems []string, v string) bool {
 	return false
 }
 
-const UserIDKey = "UserID"
 
-func CheckUserTypeMiddleware() echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			userClaim, ok := c.Get(UserClaimKey).(*TokenPayload)
-			if !ok {
-				// return echo.NewHTTPError(http.StatusUnauthorized, "Invalid user")
-			} else {
-				c.Set(UserIDKey, userClaim.UserID)
-			}
-
-			return next(c)
-		}
-	}
-}

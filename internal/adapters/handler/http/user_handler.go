@@ -57,36 +57,3 @@ func (s *Server) LoginUser(c echo.Context) error {
 	resp := dto.NewLoginUserResponse(user, token)
 	return s.handleSuccess(c, resp)
 }
-
-func (s *Server) UpdateProfile(c echo.Context) error {
-	userID, ok := c.Get(UserIDKey).(string)
-	if !ok {
-		return s.handleError(c, dto.UnauthorizedResponse)
-	}
-
-	var req dto.UpdateProfileRequest
-	if err := c.Bind(&req); err != nil {
-		return s.handleError(c, dto.BadRequestResponse)
-	}
-
-	if err := c.Validate(&req); err != nil {
-		return s.handleError(c, dto.BadRequestResponse)
-	}
-
-	updatedProfile, err := s.UserService.UpdateProfile(c.Request().Context(), userID, &user.UpdateProfileRequest{
-		Username:    req.Username,
-		DisplayName: req.DisplayName,
-		AvatarURL:   req.AvatarURL,
-		PhoneNumber: req.PhoneNumber,
-		NationalID:  req.NationalID,
-		BirthYear:   req.BirthYear,
-		Gender:      req.Gender,
-		Team:        req.Team,
-	})
-	if err != nil {
-		return s.handleError(c, dto.InternalErrorResponse)
-	}
-
-	resp := dto.NewUpdateProfileResponse(updatedProfile)
-	return s.handleSuccess(c, resp)
-}

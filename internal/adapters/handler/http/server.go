@@ -21,9 +21,7 @@ type Server struct {
 	Logger *zap.SugaredLogger
 
 	// service layers
-	UserService     ports.UserService
-	AccountService  ports.AccountService
-	BankLinkService ports.BankLinkService
+	UserService ports.UserService
 }
 
 type CustomValidator struct {
@@ -53,7 +51,6 @@ func New(options ...Options) (*Server, error) {
 
 	s.RegisterGlobalMiddlewares()
 	s.RegisterAuthMiddlewares()
-	s.RegisterUserClaimsMiddlewares()
 	s.RegisterRoute()
 
 	s.RegisterHealthCheck(s.Router.Group(""))
@@ -83,10 +80,6 @@ func (s *Server) RegisterAuthMiddlewares() {
 		"/api/auth",
 	}
 	s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())
-}
-
-func (s *Server) RegisterUserClaimsMiddlewares() {
-	s.Router.Use(CheckUserTypeMiddleware())
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -132,13 +125,4 @@ func (s *Server) RegisterRoute() {
 	// auth
 	apiGroup.POST("/auth/register", s.CreateUser)
 	apiGroup.POST("/auth/login", s.LoginUser)
-	// user
-	apiGroup.PUT("/user/profile", s.UpdateProfile)
-	// accounts
-	apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)
-	apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)
-	apiGroup.POST("/accounts/savings/flexible", s.CreateFlexibleSavingsAccount)
-	apiGroup.GET("/accounts", s.GetAccounts)
-	// bank links
-	apiGroup.POST("/user/bank-accounts", s.LinkBankAccount)
 }
