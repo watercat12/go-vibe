@@ -17,6 +17,7 @@ import (
 	httpserver "e-wallet/internal/adapters/handler/http"
 	"e-wallet/internal/adapters/repository/postgres"
 	"e-wallet/internal/adapters/service"
+	accountapp "e-wallet/internal/application/account"
 	profileapp "e-wallet/internal/application/profile"
 	"e-wallet/internal/application/user"
 	"e-wallet/internal/config"
@@ -64,6 +65,10 @@ func main() {
 
 	profileRepo := postgres.NewProfileRepository(db)
 	server.ProfileService = profileapp.NewProfileService(userRepo, profileRepo)
+
+	accountRepo := postgres.NewAccountRepository(db)
+	savingsRepo := postgres.NewSavingsAccountDetailRepository(db)
+	server.AccountService = accountapp.NewAccountService(userRepo, accountRepo, savingsRepo)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	applog.Info("server started!")

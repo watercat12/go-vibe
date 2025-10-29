@@ -15,6 +15,195 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/accounts": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all accounts (payment and savings) for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "List user accounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ListAccountsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/accounts/payment": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new payment account for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create payment account",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/accounts/savings/fixed": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new fixed-term savings account for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create fixed savings account",
+                "parameters": [
+                    {
+                        "description": "Fixed savings account creation data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateFixedSavingsAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/accounts/savings/flexible": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new flexible savings account for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create flexible savings account",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "description": "Authenticate user and return token",
@@ -233,6 +422,102 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.AccountResponse": {
+            "type": "object",
+            "properties": {
+                "account_number": {
+                    "type": "string",
+                    "example": "1234567890"
+                },
+                "account_type": {
+                    "type": "string",
+                    "example": "payment"
+                },
+                "balance": {
+                    "type": "number",
+                    "example": 1000.5
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "acc-123"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "user-123"
+                }
+            }
+        },
+        "dto.AccountWithDetailsResponse": {
+            "type": "object",
+            "properties": {
+                "account_number": {
+                    "type": "string",
+                    "example": "1234567890"
+                },
+                "account_type": {
+                    "type": "string",
+                    "example": "payment"
+                },
+                "balance": {
+                    "type": "number",
+                    "example": 1000.5
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "acc-123"
+                },
+                "savings_detail": {
+                    "$ref": "#/definitions/dto.SavingsAccountDetailResponse"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "user-123"
+                }
+            }
+        },
+        "dto.CreateFixedSavingsAccountRequest": {
+            "type": "object",
+            "required": [
+                "term_code"
+            ],
+            "properties": {
+                "term_code": {
+                    "type": "string",
+                    "enum": [
+                        "1",
+                        "3",
+                        "6",
+                        "8",
+                        "12"
+                    ],
+                    "example": "12"
+                }
+            }
+        },
         "dto.CreateUserRequest": {
             "type": "object",
             "required": [
@@ -260,6 +545,17 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.ListAccountsResponse": {
+            "type": "object",
+            "properties": {
+                "accounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.AccountWithDetailsResponse"
+                    }
                 }
             }
         },
@@ -329,10 +625,45 @@ const docTemplate = `{
             "properties": {
                 "data": {},
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Success"
                 },
                 "status": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "dto.SavingsAccountDetailResponse": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "string",
+                    "example": "acc-123"
+                },
+                "annual_interest_rate": {
+                    "type": "number",
+                    "example": 5.5
+                },
+                "is_fixed_term": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "last_interest_calc_date": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "maturity_date": {
+                    "type": "string",
+                    "example": "2024-10-01T00:00:00Z"
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "2023-10-01T00:00:00Z"
+                },
+                "term_months": {
+                    "type": "integer",
+                    "example": 12
                 }
             }
         },

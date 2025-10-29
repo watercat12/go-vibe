@@ -1,5 +1,75 @@
 basePath: /
 definitions:
+  dto.AccountResponse:
+    properties:
+      account_number:
+        example: "1234567890"
+        type: string
+      account_type:
+        example: payment
+        type: string
+      balance:
+        example: 1000.5
+        type: number
+      created_at:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      id:
+        example: acc-123
+        type: string
+      status:
+        example: active
+        type: string
+      updated_at:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      user_id:
+        example: user-123
+        type: string
+    type: object
+  dto.AccountWithDetailsResponse:
+    properties:
+      account_number:
+        example: "1234567890"
+        type: string
+      account_type:
+        example: payment
+        type: string
+      balance:
+        example: 1000.5
+        type: number
+      created_at:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      id:
+        example: acc-123
+        type: string
+      savings_detail:
+        $ref: '#/definitions/dto.SavingsAccountDetailResponse'
+      status:
+        example: active
+        type: string
+      updated_at:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      user_id:
+        example: user-123
+        type: string
+    type: object
+  dto.CreateFixedSavingsAccountRequest:
+    properties:
+      term_code:
+        enum:
+        - "1"
+        - "3"
+        - "6"
+        - "8"
+        - "12"
+        example: "12"
+        type: string
+    required:
+    - term_code
+    type: object
   dto.CreateUserRequest:
     properties:
       email:
@@ -19,6 +89,13 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.ListAccountsResponse:
+    properties:
+      accounts:
+        items:
+          $ref: '#/definitions/dto.AccountWithDetailsResponse'
+        type: array
     type: object
   dto.LoginUserRequest:
     properties:
@@ -64,8 +141,34 @@ definitions:
     properties:
       data: {}
       message:
+        example: Success
         type: string
       status:
+        example: 200
+        type: integer
+    type: object
+  dto.SavingsAccountDetailResponse:
+    properties:
+      account_id:
+        example: acc-123
+        type: string
+      annual_interest_rate:
+        example: 5.5
+        type: number
+      is_fixed_term:
+        example: true
+        type: boolean
+      last_interest_calc_date:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      maturity_date:
+        example: "2024-10-01T00:00:00Z"
+        type: string
+      start_date:
+        example: "2023-10-01T00:00:00Z"
+        type: string
+      term_months:
+        example: 12
         type: integer
     type: object
   dto.UpdateProfileRequest:
@@ -118,6 +221,125 @@ info:
   title: E-Wallet API
   version: "1.0"
 paths:
+  /api/accounts:
+    get:
+      consumes:
+      - application/json
+      description: Get all accounts (payment and savings) for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ListAccountsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: List user accounts
+      tags:
+      - accounts
+  /api/accounts/payment:
+    post:
+      consumes:
+      - application/json
+      description: Create a new payment account for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create payment account
+      tags:
+      - accounts
+  /api/accounts/savings/fixed:
+    post:
+      consumes:
+      - application/json
+      description: Create a new fixed-term savings account for the authenticated user
+      parameters:
+      - description: Fixed savings account creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateFixedSavingsAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create fixed savings account
+      tags:
+      - accounts
+  /api/accounts/savings/flexible:
+    post:
+      consumes:
+      - application/json
+      description: Create a new flexible savings account for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create flexible savings account
+      tags:
+      - accounts
   /api/auth/login:
     post:
       consumes:

@@ -3,8 +3,8 @@ package dto
 import "net/http"
 
 type Response struct {
-	Status            int    `json:"status"`
-	Message           string `json:"message"`
+	Status            int    `json:"status" example:"200"`
+	Message           string `json:"message" example:"Success"`
 	Data              any    `json:"data"`
 }
 

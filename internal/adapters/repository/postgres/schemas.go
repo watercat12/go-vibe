@@ -7,8 +7,10 @@ import (
 )
 
 const (
-	UsersTableName      = "users"
-	UserProfilesTableName = "user_profiles"
+	UsersTableName                = "users"
+	UserProfilesTableName         = "user_profiles"
+	AccountsTableName             = "accounts"
+	SavingsAccountDetailsTableName = "savings_account_details"
 )
 
 type User struct {

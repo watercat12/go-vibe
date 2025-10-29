@@ -26,6 +26,7 @@ type Server struct {
 	// service layers
 	UserService    ports.UserService
 	ProfileService ports.ProfileService
+	AccountService ports.AccountService
 }
 
 type CustomValidator struct {
@@ -143,6 +144,12 @@ func (s *Server) RegisterRoute() {
 	// users
 	apiGroup.PUT("/users/profile", s.UpdateProfile)
 	apiGroup.GET("/users/profile", s.GetProfile)
+
+	// accounts
+	apiGroup.POST("/accounts/payment", s.CreatePaymentAccount)
+	apiGroup.POST("/accounts/savings/fixed", s.CreateFixedSavingsAccount)
+	apiGroup.POST("/accounts/savings/flexible", s.CreateFlexibleSavingsAccount)
+	apiGroup.GET("/accounts", s.ListAccounts)
 }
 
 func (s *Server) RegisterSwagger() {
