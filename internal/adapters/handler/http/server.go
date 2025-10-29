@@ -12,7 +12,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/swaggo/echo-swagger"
 	"go.uber.org/zap"
+
+	_ "e-wallet/cmd/api/docs"
 )
 
 type Server struct {
@@ -53,6 +56,7 @@ func New(options ...Options) (*Server, error) {
 	s.RegisterGlobalMiddlewares()
 	s.RegisterAuthMiddlewares()
 	s.RegisterRoute()
+	s.RegisterSwagger()
 
 	s.RegisterHealthCheck(s.Router.Group(""))
 
@@ -79,6 +83,7 @@ func (s *Server) RegisterAuthMiddlewares() {
 	skipperPath := []string{
 		"/healthz",
 		"/api/auth",
+		"/swagger/",
 	}
 	s.Router.Use(NewAuthentication("header:Authorization", "Bearer", skipperPath).Middleware())
 }
@@ -87,6 +92,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.Router.ServeHTTP(w, r)
 }
 
+// RegisterHealthCheck godoc
+//
+//	@Summary		Health check
+//	@Description	Check if the service is up and running
+//	@Tags			health
+//	@Produce		json
+//	@Success		200	{object}	map[string]string
+//	@Router			/healthz [get]
 func (s *Server) RegisterHealthCheck(router *echo.Group) {
 	router.GET("/healthz", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{
@@ -130,4 +143,8 @@ func (s *Server) RegisterRoute() {
 	// users
 	apiGroup.PUT("/users/profile", s.UpdateProfile)
 	apiGroup.GET("/users/profile", s.GetProfile)
+}
+
+func (s *Server) RegisterSwagger() {
+	s.Router.GET("/swagger/*", echoSwagger.WrapHandler)
 }

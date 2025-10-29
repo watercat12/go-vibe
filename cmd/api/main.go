@@ -1,3 +1,12 @@
+//	@title			E-Wallet API
+//	@version		1.0
+//	@description	E-Wallet service API
+//	@host			pi.local:5111
+//	@BasePath		/
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+//	@description				Type "Bearer" followed by a space and JWT token.
 package main
 
 import (

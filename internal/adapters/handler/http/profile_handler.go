@@ -7,6 +7,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// UpdateProfile godoc
+//
+//	@Summary		Update user profile
+//	@Description	Update the authenticated user's profile information
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dto.UpdateProfileRequest	true	"Profile update data"
+//	@Success		200		{object}	dto.ProfileResponse
+//	@Failure		400		{object}	dto.Response
+//	@Failure		401		{object}	dto.Response
+//	@Failure		500		{object}	dto.Response
+//	@Router			/api/users/profile [put]
+//	@Security		BearerAuth
 func (s *Server) UpdateProfile(c echo.Context) error {
 	userID := c.Get(UserIDKey).(string)
 	if userID == "" {
@@ -44,6 +58,18 @@ func (s *Server) UpdateProfile(c echo.Context) error {
 	return s.handleSuccess(c, resp)
 }
 
+// GetProfile godoc
+//
+//	@Summary		Get user profile
+//	@Description	Retrieve the authenticated user's profile information
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	dto.ProfileResponse
+//	@Failure		401	{object}	dto.Response
+//	@Failure		500	{object}	dto.Response
+//	@Router			/api/users/profile [get]
+//	@Security		BearerAuth
 func (s *Server) GetProfile(c echo.Context) error {
 	userID := c.Get(UserIDKey).(string)
 	if userID == "" {
