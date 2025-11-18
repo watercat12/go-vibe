@@ -1,3 +1,5 @@
 .env
 tmp
 .roo
+coverage
+coverage_reports

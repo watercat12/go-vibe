@@ -1,0 +1,85 @@
+erDiagram
+    users ||--|| user_profiles : "has"
+    users ||--o{ accounts : "owns"
+    accounts ||--|| savings_account_details : "details for savings"
+    accounts ||--o{ transactions : "has"
+    accounts ||--o{ flexible_savings_interest_history : "interest history"
+    accounts ||--o{ fixed_savings_interest_history : "interest history"
+
+    users {
+        UUID id PK
+        VARCHAR username
+        VARCHAR email
+        VARCHAR password_hash
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        BOOLEAN is_email_verified
+        BOOLEAN is_profile_completed
+    }
+
+    user_profiles {
+        UUID user_id PK,FK
+        VARCHAR display_name
+        VARCHAR avatar_url
+        VARCHAR phone_number
+        VARCHAR national_id
+        INTEGER birth_year
+        VARCHAR gender
+        VARCHAR team
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+    }
+
+    accounts {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR account_number
+        VARCHAR account_type
+        DECIMAL balance
+        VARCHAR status
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+    }
+
+    savings_account_details {
+        UUID account_id PK,FK
+        BOOLEAN is_fixed_term
+        INTEGER term_months
+        DECIMAL annual_interest_rate
+        DATE start_date
+        DATE maturity_date
+        DATE last_interest_calc_date
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+    }
+
+    transactions {
+        UUID id PK
+        UUID account_id FK
+        VARCHAR transaction_type
+        DECIMAL amount
+        TIMESTAMPTZ transaction_date
+        VARCHAR description
+        BOOLEAN is_penalty
+        TIMESTAMPTZ created_at
+    }
+
+    flexible_savings_interest_history {
+        UUID id PK
+        UUID account_id FK
+        DATE calculation_date
+        DECIMAL eod_balance
+        DECIMAL annual_rate_applied
+        DECIMAL daily_interest_amount
+        BOOLEAN is_promotional_rate
+        TIMESTAMPTZ created_at
+    }
+
+    fixed_savings_interest_history {
+        UUID id PK
+        UUID account_id FK
+        VARCHAR calculation_period
+        DECIMAL total_interest_amount
+        BOOLEAN is_early_withdrawal
+        TIMESTAMPTZ created_at
+    }

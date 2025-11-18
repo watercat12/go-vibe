@@ -1,0 +1,11 @@
+dir: '{{.InterfaceDir}}'
+structname: '{{.Mock}}{{.InterfaceName}}'
+template: testify
+
+packages:
+  e-wallet/internal/ports:
+    config:
+      all: true
+      dir: "mocks"
+      pkgname: "mocks"
+      filename: "ports_mocks.go"
